@@ -8,6 +8,7 @@ public class motorTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        DcMotor motor;
+        DcMotor motor, motor1;
+
     }
 }
