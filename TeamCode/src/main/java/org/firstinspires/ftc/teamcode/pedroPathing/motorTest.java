@@ -1,13 +1,17 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+@TeleOp
 public class motorTest extends LinearOpMode {
 
     private DcMotor frontLeft, frontRight, backLeft, backRight;
 
+
     @Override
+
     public void runOpMode() throws InterruptedException {
         frontLeft  = hardwareMap.get(DcMotor.class, "frontLeftMotor");
         frontRight = hardwareMap.get(DcMotor.class, "frontRightMotor");

@@ -2,17 +2,22 @@ package org.firstinspires.ftc.teamcode.pedroPathing;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-
+@TeleOp
 public class RedTeleOp extends LinearOpMode {
 
     private DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor;
+
+    private DcMotorEx shooter0, shooter1, intake;
     private IMU imu;
+
 
     double frontLeftPower, backLeftPower, frontRightPower, backRightPower, slowMode;
 
@@ -28,11 +33,16 @@ public class RedTeleOp extends LinearOpMode {
         frontRightMotor= hardwareMap.get(DcMotor.class, "frontRightMotor");
         backRightMotor = hardwareMap.get(DcMotor.class, "backRightMotor");
 
+        shooter0 = hardwareMap.get(DcMotorEx.class, "shooter0");
+        shooter1 = hardwareMap.get(DcMotorEx.class, "shooter1");
+        intake = hardwareMap.get(DcMotorEx.class, "intake");
 
         frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        shooter0.setDirection(DcMotorSimple.Direction.REVERSE);
 
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
@@ -71,11 +81,15 @@ public class RedTeleOp extends LinearOpMode {
             backRightPower  = (rotY + rotX - rx) / denominator;
 
 
+//
+//            frontLeftMotor.setPower(frontLeftPower  * slowMode);
+//            backLeftMotor.setPower(backLeftPower    * slowMode);
+//            frontRightMotor.setPower(frontRightPower* slowMode);
+//            backRightMotor.setPower(backRightPower  * slowMode);
 
-            frontLeftMotor.setPower(frontLeftPower  * slowMode);
-            backLeftMotor.setPower(backLeftPower    * slowMode);
-            frontRightMotor.setPower(frontRightPower* slowMode);
-            backRightMotor.setPower(backRightPower  * slowMode);
+            shooter0.setVelocity(1000);
+            shooter1.setVelocity(1000);
+            intake.setPower(gamepad1.left_stick_y);
 
         }
 
