@@ -5,10 +5,31 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class motorTest extends LinearOpMode {
 
+    private DcMotor frontLeft, frontRight, backLeft, backRight;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        DcMotor motor, motor1;
+        frontLeft  = hardwareMap.get(DcMotor.class, "frontLeftMotor");
+        frontRight = hardwareMap.get(DcMotor.class, "frontRightMotor");
+        backLeft   = hardwareMap.get(DcMotor.class, "backLeftMotor");
+        backRight  = hardwareMap.get(DcMotor.class, "backRightMotor");
+
+        waitForStart();
+        while(opModeIsActive()){
+            if(gamepad1.a){
+                frontLeft.setPower(1);
+            }
+            if(gamepad1.b){
+                frontRight.setPower(1);
+            }
+            if(gamepad1.x){
+                backLeft.setPower(1);
+            }
+            if(gamepad1.y){
+                backRight.setPower(1);
+            }
+        }
+
 
     }
 }
