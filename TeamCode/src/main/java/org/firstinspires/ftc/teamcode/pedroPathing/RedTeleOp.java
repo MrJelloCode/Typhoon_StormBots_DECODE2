@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -17,6 +18,8 @@ public class RedTeleOp extends LinearOpMode {
 
     private DcMotorEx shooter0, shooter1, intake;
     private IMU imu;
+
+    private Servo gate;
 
 
     double frontLeftPower, backLeftPower, frontRightPower, backRightPower, slowMode;
@@ -36,6 +39,10 @@ public class RedTeleOp extends LinearOpMode {
         shooter0 = hardwareMap.get(DcMotorEx.class, "shooter0");
         shooter1 = hardwareMap.get(DcMotorEx.class, "shooter1");
         intake = hardwareMap.get(DcMotorEx.class, "intake");
+
+        gate = hardwareMap.get(Servo.class, "Servo");
+
+
 
         frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -90,6 +97,7 @@ public class RedTeleOp extends LinearOpMode {
             shooter0.setVelocity(1000);
             shooter1.setVelocity(1000);
             intake.setPower(gamepad1.left_stick_y);
+            gate.setPosition(0);
 
         }
 
