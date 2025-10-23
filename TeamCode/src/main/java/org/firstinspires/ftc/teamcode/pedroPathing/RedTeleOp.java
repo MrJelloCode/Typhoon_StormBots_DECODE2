@@ -97,15 +97,19 @@ public class RedTeleOp extends LinearOpMode {
 //            frontRightMotor.setPower(frontRightPower* slowMode);
 //            backRightMotor.setPower(backRightPower  * slowMode);
             if((gamepad2.right_trigger > 0.1) && (servoPosition == 0.4)) {
-                shooter0.setVelocity(1000);
-                shooter1.setVelocity(1000);
+                shooter0.setVelocity(1250);
+                shooter1.setVelocity(1250);
+            }
+            else{
+                shooter0.setVelocity(0);
+                shooter1.setVelocity(0);
             }
             if(gamepad2.dpad_left) {
                 shooter0.setVelocity(0);
                 shooter1.setVelocity(0);
             }
 
-            intake.setPower(-gamepad2.left_stick_y);
+            intake.setPower(-gamepad2.left_stick_y*0.6);
 
             //Open
             if(gamepad2.a) {
