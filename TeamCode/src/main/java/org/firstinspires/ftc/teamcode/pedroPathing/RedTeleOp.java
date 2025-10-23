@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -10,7 +11,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-
+@Configurable
 @TeleOp
 public class RedTeleOp extends LinearOpMode {
 
@@ -23,7 +24,7 @@ public class RedTeleOp extends LinearOpMode {
 
 
     double frontLeftPower, backLeftPower, frontRightPower, backRightPower, slowMode;
-    double servoPosition = 0.7;
+    public static double servoPosition = 0.7, shooterVelocity = 1250, powerFix = 0.6;
 
 
 
@@ -109,7 +110,11 @@ public class RedTeleOp extends LinearOpMode {
                 shooter1.setVelocity(0);
             }
 
-            intake.setPower(-gamepad2.left_stick_y*0.6);
+            intake.setPower(-gamepad2.left_stick_y*powerFix);
+
+            if((gamepad2.left_trigger > 0.1) && ((shooter1.getVelocity() - 100 <  shooterVelocity) && (shooterVelocity < shooter1.getVelocity() + 100))) {
+                intake.setPower(1);
+            }
 
             //Open
             if(gamepad2.a) {
