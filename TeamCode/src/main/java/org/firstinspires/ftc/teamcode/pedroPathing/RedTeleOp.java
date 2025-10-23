@@ -23,6 +23,7 @@ public class RedTeleOp extends LinearOpMode {
 
 
     double frontLeftPower, backLeftPower, frontRightPower, backRightPower, slowMode;
+    double servoPosition = 0.7;
 
 
 
@@ -67,7 +68,9 @@ public class RedTeleOp extends LinearOpMode {
             double x  =  gamepad1.left_stick_x;
             double rx =  gamepad1.right_stick_x;
 
-            if (gamepad1.start) imu.resetYaw();
+            if (gamepad1.start) {
+                imu.resetYaw();
+            }
 
             if (gamepad1.left_trigger > 0.1) slowMode = 0.4;
             else if (gamepad1.right_trigger > 0.1) slowMode = 0.2;
@@ -93,12 +96,28 @@ public class RedTeleOp extends LinearOpMode {
 //            backLeftMotor.setPower(backLeftPower    * slowMode);
 //            frontRightMotor.setPower(frontRightPower* slowMode);
 //            backRightMotor.setPower(backRightPower  * slowMode);
+            if((gamepad2.right_trigger > 0.1) && (servoPosition == 0.4)) {
+                shooter0.setVelocity(1000);
+                shooter1.setVelocity(1000);
+            }
+            if(gamepad2.dpad_left) {
+                shooter0.setVelocity(0);
+                shooter1.setVelocity(0);
+            }
 
-            shooter0.setVelocity(1000);
-            shooter1.setVelocity(1000);
-            intake.setPower(gamepad1.left_stick_y);
-            gate.setPosition(0);
+            intake.setPower(-gamepad2.left_stick_y);
 
+            //Open
+            if(gamepad2.a) {
+                servoPosition = 0.4;
+            }
+
+            //Close
+            if(gamepad2.b) {
+                servoPosition = 0.7;
+            }
+
+            gate.setPosition(servoPosition);
         }
 
         }
