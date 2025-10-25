@@ -74,7 +74,7 @@ public class BlueClose extends OpMode {
                 new InstantCommand(() -> shooterSubsystem.stop()),
                 new InstantCommand(() -> gateSubsystem.close()),
 
-                // 2️⃣ Grab close rings
+                // 2️⃣ Grab close balls
                 new ParallelCommandGroup(
                         new InstantCommand(() -> follower.followPath(paths.toAlignClose, true)),
                         new InstantCommand(() -> intakeSubsystem.setPower(0.7)),
@@ -83,7 +83,7 @@ public class BlueClose extends OpMode {
                 new InstantCommand(() -> follower.followPath(paths.toGrabClose, true)),
                 new WaitCommand(300),
 
-                // 3️⃣ Shoot close rings
+                // 3️⃣ Shoot close balls
                 new InstantCommand(() -> intakeSubsystem.stop()),
                 new InstantCommand(() -> follower.followPath(paths.toScoreClose, true)),
                 new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250)),
@@ -97,7 +97,7 @@ public class BlueClose extends OpMode {
                 new InstantCommand(() -> shooterSubsystem.stop()),
                 new InstantCommand(() -> gateSubsystem.close()),
 
-                // 4️⃣ Grab secondary rings
+                // 4️⃣ Grab secondary balls
                 new ParallelCommandGroup(
                         new InstantCommand(() -> follower.followPath(paths.toAlignSecondary, true)),
                         new InstantCommand(() -> intakeSubsystem.setPower(0.7)),
@@ -106,7 +106,7 @@ public class BlueClose extends OpMode {
                 new InstantCommand(() -> follower.followPath(paths.toGrabSecondary, true)),
                 new WaitCommand(300),
 
-                // 5️⃣ Shoot secondary rings
+                // 5️⃣ Shoot secondary balls
                 new InstantCommand(() -> intakeSubsystem.stop()),
                 new InstantCommand(() -> follower.followPath(paths.toScoreSecondary, true)),
                 new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250)),
@@ -146,7 +146,6 @@ public class BlueClose extends OpMode {
 
     // ✅ Paths for Pedro Pathing
     public static class Paths {
-
         public PathChain ToScoreInitial;
         public PathChain toAlignClose;
         public PathChain toGrabClose;
@@ -157,44 +156,68 @@ public class BlueClose extends OpMode {
         public PathChain toPark;
 
         public Paths(Follower follower) {
-            ToScoreInitial = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(38.734, 134.544), new Pose(61.805, 82.035)))
-                    .setLinearHeadingInterpolation(Math.toRadians(-90), Math.toRadians(-50))
+            ToScoreInitial = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(22.329, 124.063), new Pose(61.805, 82.035))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(-37), Math.toRadians(-35))
                     .build();
 
-            toAlignClose = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(61.805, 82.035), new Pose(43.009, 84.106)))
-                    .setLinearHeadingInterpolation(Math.toRadians(-50), Math.toRadians(180))
+            toAlignClose = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(61.805, 82.035), new Pose(43.009, 84.106))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(-35), Math.toRadians(180))
                     .build();
 
-            toGrabClose = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(43.009, 84.106), new Pose(16.726, 84.265)))
+            toGrabClose = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(43.009, 84.106), new Pose(16.726, 84.265))
+                    )
                     .setTangentHeadingInterpolation()
                     .build();
 
-            toScoreClose = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(16.726, 84.265), new Pose(62.442, 82.035)))
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-50))
+            toScoreClose = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(16.726, 84.265), new Pose(62.442, 82.035))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-35))
                     .build();
 
-            toAlignSecondary = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(62.442, 82.035), new Pose(49.899, 59.810)))
-                    .setLinearHeadingInterpolation(Math.toRadians(-50), Math.toRadians(180))
+            toAlignSecondary = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(62.442, 82.035), new Pose(49.899, 59.810))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(-35), Math.toRadians(180))
                     .build();
 
-            toGrabSecondary = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(49.899, 59.810), new Pose(19.593, 59.257)))
+            toGrabSecondary = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(49.899, 59.810), new Pose(19.593, 59.257))
+                    )
                     .setTangentHeadingInterpolation()
                     .build();
 
-            toScoreSecondary = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(19.593, 59.257), new Pose(61.646, 82.195)))
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-50))
+            toScoreSecondary = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(19.593, 59.257), new Pose(61.646, 82.195))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-35))
                     .build();
 
-            toPark = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(61.646, 82.195), new Pose(53.204, 59.257)))
-                    .setLinearHeadingInterpolation(Math.toRadians(-50), Math.toRadians(180))
+            toPark = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(61.646, 82.195), new Pose(53.204, 59.257))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(-35), Math.toRadians(180))
                     .build();
         }
     }
