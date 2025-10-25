@@ -24,7 +24,7 @@ public class RedTeleOp extends LinearOpMode {
 
 
     double frontLeftPower, backLeftPower, frontRightPower, backRightPower, slowMode;
-    public static double servoPosition = 0.7, shooterVelocity = 1250, powerFix = 0.6;
+    public static double servoPosition = 0.7, shooterVelocity = 1250, powerFix = 0.7;
 
 
 
