@@ -110,4 +110,7 @@ public class ShooterSubsystem {
     public double getRightError() {
         return rightError;
     }
+    public boolean isAtSpeed(double target, double tolerance) {
+        return Math.abs(leftVelocity - target) < tolerance && Math.abs(rightVelocity - target) < tolerance;
+    }
 }
