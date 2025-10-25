@@ -11,75 +11,80 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.pedroPathing.subsystems.ShooterSubsystem;
+
 @Configurable
 @TeleOp
 public class RedTeleOp extends LinearOpMode {
 
+    // Drivetrain motors
     private DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor;
 
-    private DcMotorEx shooter0, shooter1, intake;
-    private IMU imu;
-
+    // Intake + servo
+    private DcMotorEx intake;
     private Servo gate;
 
+    // Subsystems
+    private ShooterSubsystem shooter;
 
+    // IMU
+    private IMU imu;
+
+    // Drive + control variables
     double frontLeftPower, backLeftPower, frontRightPower, backRightPower, slowMode;
-    public static double servoPosition = 0.7, shooterVelocity = 1250, powerFix = 0.7;
 
-
-
-
+    // Tunables
+    public static double servoPosition = 0.7;
+    public static double shooterVelocity = 1250;
+    public static double powerFix = 0.7;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
+        // --- Hardware mapping ---
         frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
         backLeftMotor  = hardwareMap.get(DcMotor.class, "backLeftMotor");
         frontRightMotor= hardwareMap.get(DcMotor.class, "frontRightMotor");
         backRightMotor = hardwareMap.get(DcMotor.class, "backRightMotor");
 
-        shooter0 = hardwareMap.get(DcMotorEx.class, "shooter0");
-        shooter1 = hardwareMap.get(DcMotorEx.class, "shooter1");
         intake = hardwareMap.get(DcMotorEx.class, "intake");
-
         gate = hardwareMap.get(Servo.class, "Servo");
 
+        // Shooter subsystem handles its own motors
+        shooter = new ShooterSubsystem(hardwareMap);
 
-
+        // Motor directions
         frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        shooter0.setDirection(DcMotorSimple.Direction.REVERSE);
-
+        // IMU setup
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD,
                 RevHubOrientationOnRobot.UsbFacingDirection.UP));
         imu.initialize(parameters);
 
+        telemetry.addLine("Initialized. Ready to start!");
+        telemetry.update();
+
         waitForStart();
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
 
-            // Driver control inputs
+            // --- DRIVER CONTROL ---
             double y  = -gamepad1.left_stick_y;
             double x  =  gamepad1.left_stick_x;
             double rx =  gamepad1.right_stick_x;
 
-            if (gamepad1.start) {
-                imu.resetYaw();
-            }
+            if (gamepad1.start) imu.resetYaw();
 
             if (gamepad1.left_trigger > 0.1) slowMode = 0.4;
             else if (gamepad1.right_trigger > 0.1) slowMode = 0.2;
             else slowMode = 1.0;
 
-
-
-            // Field-centric drive calculation
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
@@ -91,43 +96,46 @@ public class RedTeleOp extends LinearOpMode {
             frontRightPower = (rotY - rotX - rx) / denominator;
             backRightPower  = (rotY + rotX - rx) / denominator;
 
+            frontLeftMotor.setPower(frontLeftPower  * slowMode);
+            backLeftMotor.setPower(backLeftPower    * slowMode);
+            frontRightMotor.setPower(frontRightPower* slowMode);
+            backRightMotor.setPower(backRightPower  * slowMode);
 
-//
-//            frontLeftMotor.setPower(frontLeftPower  * slowMode);
-//            backLeftMotor.setPower(backLeftPower    * slowMode);
-//            frontRightMotor.setPower(frontRightPower* slowMode);
-//            backRightMotor.setPower(backRightPower  * slowMode);
-            if((gamepad2.right_trigger > 0.1) && (servoPosition == 0.4)) {
-                shooter0.setVelocity(1250);
-                shooter1.setVelocity(1250);
-            }
-            else{
-                shooter0.setVelocity(0);
-                shooter1.setVelocity(0);
-            }
-            if(gamepad2.dpad_left) {
-                shooter0.setVelocity(0);
-                shooter1.setVelocity(0);
+
+            // --- SHOOTER CONTROL ---
+            if (gamepad2.right_trigger > 0.1 && servoPosition == 0.4) {
+                shooter.setTargetVelocity(shooterVelocity);
+            } else {
+                shooter.stop();
             }
 
-            intake.setPower(-gamepad2.left_stick_y*powerFix);
 
-            if((gamepad2.left_trigger > 0.1) && ((shooter1.getVelocity() - 100 <  shooterVelocity) && (shooterVelocity < shooter1.getVelocity() + 100))) {
+            // Update shooter PIDF loop
+            shooter.update();
+
+
+            // --- INTAKE CONTROL ---
+            intake.setPower(-gamepad2.left_stick_y * powerFix);
+
+            if ((gamepad2.left_trigger > 0.1) && shooter.atTargetVelocity()) {
                 intake.setPower(1);
             }
 
-            //Open
-            if(gamepad2.a) {
-                servoPosition = 0.4;
-            }
-
-            //Close
-            if(gamepad2.b) {
-                servoPosition = 0.7;
-            }
+            // --- SERVO GATE CONTROL ---
+            if (gamepad2.a) servoPosition = 0.4;  // Open
+            if (gamepad2.b) servoPosition = 0.7;  // Close
 
             gate.setPosition(servoPosition);
-        }
 
+
+            // --- TELEMETRY ---
+            telemetry.addData("Shooter Target", shooter.getTargetVelocity());
+            telemetry.addData("Left Vel (0)", shooter.getLeftVelocity());
+            telemetry.addData("Right Vel(1)", shooter.getRightVelocity());
+            telemetry.addLine();
+            telemetry.addData("At Speed?", shooter.atTargetVelocity());
+            telemetry.addData("Servo Pos", servoPosition);
+            telemetry.update();
         }
+    }
 }
