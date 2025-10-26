@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.pedroPathing.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 import org.firstinspires.ftc.teamcode.pedroPathing.subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.pedroPathing.subsystems.GateSubsystem;
 
 /**
  * Runs the intake at a given power while the gate is open.
@@ -11,12 +10,10 @@ import org.firstinspires.ftc.teamcode.pedroPathing.subsystems.GateSubsystem;
 public class RunIntakeCMD extends CommandBase {
 
     private final IntakeSubsystem intake;
-    private final GateSubsystem gate;
     private final double power;
 
-    public RunIntakeCMD(IntakeSubsystem intake, GateSubsystem gate, double power) {
+    public RunIntakeCMD(IntakeSubsystem intake, double power) {
         this.intake = intake;
-        this.gate = gate;
         this.power = power;
         // no addRequirements() because IntakeSubsystem is not a Subsystem
     }
@@ -31,9 +28,4 @@ public class RunIntakeCMD extends CommandBase {
         intake.stop();
     }
 
-    @Override
-    public boolean isFinished() {
-        // End automatically when the gate closes
-        return !gate.isOpen();
-    }
 }
