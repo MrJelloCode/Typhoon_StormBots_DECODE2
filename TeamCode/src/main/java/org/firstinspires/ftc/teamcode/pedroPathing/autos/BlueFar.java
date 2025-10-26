@@ -136,6 +136,8 @@ public class BlueFar extends OpMode {
         follower.update();
         scheduler.run();
 
+        shooterSubsystem.update();
+
         panelsTelemetry.debug("Path State", pathState);
         panelsTelemetry.debug("X", follower.getPose().getX());
         panelsTelemetry.debug("Y", follower.getPose().getY());
