@@ -54,16 +54,16 @@ public class BlueClose extends OpMode {
         panelsTelemetry.debug("Status", "Initialized");
         panelsTelemetry.update(telemetry);
     }
-
     @Override
     public void start() {
         scheduler.schedule(new SequentialCommandGroup(
 
                 // 🟦 1️⃣ Score initial preload
+                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Scoring initial preload")),
                 new InstantCommand(() -> gateSubsystem.close()),
                 new ParallelCommandGroup(
                         new InstantCommand(() -> follower.followPath(paths.ToScoreInitial, true)),
-                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250)) // spin up early
+                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250))
                 ),
                 new InstantCommand(() -> gateSubsystem.open()),
                 new WaitUntilCommand(() -> shooterSubsystem.isAtSpeed(1250, 50)),
@@ -76,6 +76,7 @@ public class BlueClose extends OpMode {
                 new InstantCommand(() -> gateSubsystem.close()),
 
                 // 🟦 2️⃣ Grab first set of balls
+                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Grabbing first set of balls")),
                 new ParallelCommandGroup(
                         new InstantCommand(() -> follower.followPath(paths.toAlignClose, true)),
                         new InstantCommand(() -> gateSubsystem.close())
@@ -88,11 +89,11 @@ public class BlueClose extends OpMode {
                 new InstantCommand(() -> intakeSubsystem.stop()),
 
                 // 🟦 3️⃣ Shoot first grabbed balls
+                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Shooting first grabbed balls")),
                 new ParallelCommandGroup(
-                new InstantCommand(() -> follower.followPath(paths.toScoreClose, true)),
-                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250))
+                        new InstantCommand(() -> follower.followPath(paths.toScoreClose, true)),
+                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250))
                 ),
-
                 new InstantCommand(() -> gateSubsystem.open()),
                 new WaitUntilCommand(() -> shooterSubsystem.isAtSpeed(1250, 50)),
 
@@ -104,6 +105,7 @@ public class BlueClose extends OpMode {
                 new InstantCommand(() -> gateSubsystem.close()),
 
                 // 🟦 4️⃣ Grab secondary balls
+                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Grabbing secondary balls")),
                 new ParallelCommandGroup(
                         new InstantCommand(() -> follower.followPath(paths.toAlignSecondary, true)),
                         new InstantCommand(() -> gateSubsystem.close())
@@ -116,9 +118,10 @@ public class BlueClose extends OpMode {
                 new InstantCommand(() -> intakeSubsystem.stop()),
 
                 // 🟦 5️⃣ Shoot secondary balls
+                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Shooting secondary balls")),
                 new ParallelCommandGroup(
-                new InstantCommand(() -> follower.followPath(paths.toScoreSecondary, true)),
-                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250))
+                        new InstantCommand(() -> follower.followPath(paths.toScoreSecondary, true)),
+                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250))
                 ),
                 new InstantCommand(() -> gateSubsystem.open()),
                 new WaitUntilCommand(() -> shooterSubsystem.isAtSpeed(1250, 50)),
@@ -131,6 +134,7 @@ public class BlueClose extends OpMode {
                 new InstantCommand(() -> gateSubsystem.close()),
 
                 // 🟦 6️⃣ Park
+                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Parking")),
                 new InstantCommand(() -> follower.followPath(paths.toPark, true)),
                 new WaitCommand(1000),
 
@@ -138,9 +142,11 @@ public class BlueClose extends OpMode {
                     intakeSubsystem.stop();
                     shooterSubsystem.stop();
                     gateSubsystem.close();
+                    panelsTelemetry.debug("Auto Step", "Finished");
                 })
         ));
     }
+
 
     @Override
     public void loop() {
