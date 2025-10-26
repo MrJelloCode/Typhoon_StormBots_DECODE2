@@ -65,12 +65,13 @@ public class BlueClose extends OpMode {
                         new InstantCommand(() -> follower.followPath(paths.ToScoreInitial, true)),
                         new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250)) // spin up early
                 ),
+                new InstantCommand(() -> gateSubsystem.open()),
                 new WaitUntilCommand(() -> shooterSubsystem.isAtSpeed(1250, 50)),
 
-                new InstantCommand(() -> gateSubsystem.open()),
-                new RunIntakeCMD(intakeSubsystem, gateSubsystem, 1.0),
-                new WaitCommand(1000),
+                new RunIntakeCMD(intakeSubsystem, 1.0),
+                new WaitCommand(2000),
 
+                new InstantCommand(() -> intakeSubsystem.stop()),
                 new InstantCommand(() -> shooterSubsystem.stop()),
                 new InstantCommand(() -> gateSubsystem.close()),
 
@@ -79,19 +80,26 @@ public class BlueClose extends OpMode {
                         new InstantCommand(() -> follower.followPath(paths.toAlignClose, true)),
                         new InstantCommand(() -> gateSubsystem.close())
                 ),
-                new InstantCommand(() -> follower.followPath(paths.toGrabClose, true)),
-                new RunIntakeCMD(intakeSubsystem, gateSubsystem, 0.7),
-                new WaitCommand(300),
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> follower.followPath(paths.toGrabClose, true)),
+                        new RunIntakeCMD(intakeSubsystem, 0.7)
+                ),
+                new WaitCommand(1000),
+                new InstantCommand(() -> intakeSubsystem.stop()),
 
                 // 🟦 3️⃣ Shoot first grabbed balls
+                new ParallelCommandGroup(
                 new InstantCommand(() -> follower.followPath(paths.toScoreClose, true)),
-                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250)),
-                new WaitUntilCommand(() -> shooterSubsystem.isAtSpeed(1250, 50)),
+                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250))
+                ),
 
                 new InstantCommand(() -> gateSubsystem.open()),
-                new RunIntakeCMD(intakeSubsystem, gateSubsystem, 1.0),
-                new WaitCommand(1000),
+                new WaitUntilCommand(() -> shooterSubsystem.isAtSpeed(1250, 50)),
 
+                new RunIntakeCMD(intakeSubsystem, 1.0),
+                new WaitCommand(2000),
+
+                new InstantCommand(() -> intakeSubsystem.stop()),
                 new InstantCommand(() -> shooterSubsystem.stop()),
                 new InstantCommand(() -> gateSubsystem.close()),
 
@@ -100,19 +108,25 @@ public class BlueClose extends OpMode {
                         new InstantCommand(() -> follower.followPath(paths.toAlignSecondary, true)),
                         new InstantCommand(() -> gateSubsystem.close())
                 ),
-                new InstantCommand(() -> follower.followPath(paths.toGrabSecondary, true)),
-                new RunIntakeCMD(intakeSubsystem, gateSubsystem, 0.7),
-                new WaitCommand(300),
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> follower.followPath(paths.toGrabSecondary, true)),
+                        new RunIntakeCMD(intakeSubsystem, 0.7)
+                ),
+                new WaitCommand(1000),
+                new InstantCommand(() -> intakeSubsystem.stop()),
 
                 // 🟦 5️⃣ Shoot secondary balls
+                new ParallelCommandGroup(
                 new InstantCommand(() -> follower.followPath(paths.toScoreSecondary, true)),
-                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250)),
+                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250))
+                ),
+                new InstantCommand(() -> gateSubsystem.open()),
                 new WaitUntilCommand(() -> shooterSubsystem.isAtSpeed(1250, 50)),
 
-                new InstantCommand(() -> gateSubsystem.open()),
-                new RunIntakeCMD(intakeSubsystem, gateSubsystem, 1.0),
-                new WaitCommand(1000),
+                new RunIntakeCMD(intakeSubsystem, 1.0),
+                new WaitCommand(2000),
 
+                new InstantCommand(() -> intakeSubsystem.stop()),
                 new InstantCommand(() -> shooterSubsystem.stop()),
                 new InstantCommand(() -> gateSubsystem.close()),
 
