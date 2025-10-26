@@ -42,7 +42,7 @@ public class BlueFar extends OpMode {
         panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
         follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(new Pose(72, 8, Math.toRadians(90)));
+        follower.setStartingPose(new Pose(53.089, 9.456, Math.toRadians(270)));
 
         paths = new Paths(follower);
 

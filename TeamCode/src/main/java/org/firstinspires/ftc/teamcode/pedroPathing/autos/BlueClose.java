@@ -43,7 +43,7 @@ public class BlueClose extends OpMode {
         panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
         follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(new Pose(72, 8, Math.toRadians(90)));
+        follower.setStartingPose(new Pose(22.329, 124.063, Math.toRadians(323)));
 
         paths = new Paths(follower);
 
