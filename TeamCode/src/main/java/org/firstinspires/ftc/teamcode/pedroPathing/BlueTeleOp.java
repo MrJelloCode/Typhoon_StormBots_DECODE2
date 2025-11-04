@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 @Configurable
 @TeleOp
-public class RedTeleOp extends LinearOpMode {
+public class BlueTeleOp extends LinearOpMode {
 
     private DcMotor frontLeftMotor, backLeftMotor, frontRightMotor, backRightMotor;
 
