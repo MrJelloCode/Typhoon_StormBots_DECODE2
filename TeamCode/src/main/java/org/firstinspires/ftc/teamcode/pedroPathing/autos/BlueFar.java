@@ -37,6 +37,9 @@ public class BlueFar extends OpMode {
     private CommandScheduler scheduler = CommandScheduler.getInstance();
     private int pathState = 0;
 
+    // Shooter target velocity (tunable)
+    public static double SHOOTER_VELOCITY = 1250;
+
     @Override
     public void init() {
         panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
@@ -62,8 +65,8 @@ public class BlueFar extends OpMode {
                 new InstantCommand(() -> gateSubsystem.close()),
                 new InstantCommand(() -> follower.followPath(paths.toScoreInitial, true)),
 
-                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250)),
-                new WaitUntilCommand(() -> shooterSubsystem.isAtSpeed(1250, 50)),
+                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(SHOOTER_VELOCITY)),
+                new WaitUntilCommand(() -> shooterSubsystem.atTargetVelocity()),
 
                 new InstantCommand(() -> gateSubsystem.open()),
                 new InstantCommand(() -> intakeSubsystem.intakeIn()),
@@ -85,9 +88,9 @@ public class BlueFar extends OpMode {
                 // 3️⃣ Shoot close balls
                 new InstantCommand(() -> intakeSubsystem.stop()),
                 new InstantCommand(() -> follower.followPath(paths.toScoreFirst, true)),
-                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250)),
+                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(SHOOTER_VELOCITY)),
 
-                new WaitUntilCommand(() -> shooterSubsystem.isAtSpeed(1250, 50)),
+                new WaitUntilCommand(() -> shooterSubsystem.atTargetVelocity()),
                 new InstantCommand(() -> gateSubsystem.open()),
                 new InstantCommand(() -> intakeSubsystem.intakeIn()),
                 new WaitCommand(1000),
@@ -108,9 +111,9 @@ public class BlueFar extends OpMode {
                 // 5️⃣ Shoot secondary balls
                 new InstantCommand(() -> intakeSubsystem.stop()),
                 new InstantCommand(() -> follower.followPath(paths.toScoreSecond, true)),
-                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250)),
+                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(SHOOTER_VELOCITY)),
 
-                new WaitUntilCommand(() -> shooterSubsystem.isAtSpeed(1250, 50)),
+                new WaitUntilCommand(() -> shooterSubsystem.atTargetVelocity()),
                 new InstantCommand(() -> gateSubsystem.open()),
                 new InstantCommand(() -> intakeSubsystem.intakeIn()),
                 new WaitCommand(1000),
@@ -135,15 +138,18 @@ public class BlueFar extends OpMode {
     public void loop() {
         follower.update();
         scheduler.run();
-
         shooterSubsystem.update();
 
         panelsTelemetry.debug("Path State", pathState);
+        panelsTelemetry.debug("Shooter Left Velocity", shooterSubsystem.getLeftVelocity());
+        panelsTelemetry.debug("Shooter Right Velocity", shooterSubsystem.getRightVelocity());
+        panelsTelemetry.debug("At Target?", shooterSubsystem.atTargetVelocity());
         panelsTelemetry.debug("X", follower.getPose().getX());
         panelsTelemetry.debug("Y", follower.getPose().getY());
         panelsTelemetry.debug("Heading", follower.getPose().getHeading());
         panelsTelemetry.update(telemetry);
     }
+
 
     // ✅ Paths for Pedro Pathing
     public static class Paths {
@@ -159,65 +165,49 @@ public class BlueFar extends OpMode {
         public Paths(Follower follower) {
             toScoreInitial = follower
                     .pathBuilder()
-                    .addPath(
-                            new BezierLine(new Pose(54.570, 9.228), new Pose(60.152, 23.127))
-                    )
+                    .addPath(new BezierLine(new Pose(54.570, 9.228), new Pose(60.152, 23.127)))
                     .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(-65))
                     .build();
 
             toAlignFirst = follower
                     .pathBuilder()
-                    .addPath(
-                            new BezierLine(new Pose(60.152, 23.127), new Pose(49.221, 35.204))
-                    )
+                    .addPath(new BezierLine(new Pose(60.152, 23.127), new Pose(49.221, 35.204)))
                     .setLinearHeadingInterpolation(Math.toRadians(-65), Math.toRadians(180))
                     .build();
 
             toGrabFirst = follower
                     .pathBuilder()
-                    .addPath(
-                            new BezierLine(new Pose(49.221, 35.204), new Pose(10.481, 36.228))
-                    )
+                    .addPath(new BezierLine(new Pose(49.221, 35.204), new Pose(10.481, 36.228)))
                     .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
 
             toScoreFirst = follower
                     .pathBuilder()
-                    .addPath(
-                            new BezierLine(new Pose(10.481, 36.228), new Pose(61.063, 23.127))
-                    )
+                    .addPath(new BezierLine(new Pose(10.481, 36.228), new Pose(61.063, 23.127)))
                     .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-65))
                     .build();
 
             toAlignSecond = follower
                     .pathBuilder()
-                    .addPath(
-                            new BezierLine(new Pose(61.063, 23.127), new Pose(12.106, 28.832))
-                    )
+                    .addPath(new BezierLine(new Pose(61.063, 23.127), new Pose(12.106, 28.832)))
                     .setLinearHeadingInterpolation(Math.toRadians(-65), Math.toRadians(250))
                     .build();
 
             toGrabSecond = follower
                     .pathBuilder()
-                    .addPath(
-                            new BezierLine(new Pose(12.106, 28.832), new Pose(12.425, 12.265))
-                    )
+                    .addPath(new BezierLine(new Pose(12.106, 28.832), new Pose(12.425, 12.265)))
                     .setLinearHeadingInterpolation(Math.toRadians(250), Math.toRadians(250))
                     .build();
 
             toScoreSecond = follower
                     .pathBuilder()
-                    .addPath(
-                            new BezierLine(new Pose(12.425, 12.265), new Pose(60.608, 23.013))
-                    )
+                    .addPath(new BezierLine(new Pose(12.425, 12.265), new Pose(60.608, 23.013)))
                     .setLinearHeadingInterpolation(Math.toRadians(250), Math.toRadians(-65))
                     .build();
 
             toPark = follower
                     .pathBuilder()
-                    .addPath(
-                            new BezierLine(new Pose(60.608, 23.013), new Pose(56.708, 41.735))
-                    )
+                    .addPath(new BezierLine(new Pose(60.608, 23.013), new Pose(56.708, 41.735)))
                     .setLinearHeadingInterpolation(Math.toRadians(-65), Math.toRadians(180))
                     .build();
         }

@@ -66,7 +66,7 @@ public class BlueClose extends OpMode {
                         new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250))
                 ),
                 new InstantCommand(() -> gateSubsystem.open()),
-                new WaitUntilCommand(() -> shooterSubsystem.isAtSpeed(1250, 50)),
+                new WaitUntilCommand(() -> shooterSubsystem.atTargetVelocity()),
 
                 new RunIntakeCMD(intakeSubsystem, 1.0),
                 new WaitCommand(2000),
@@ -95,7 +95,7 @@ public class BlueClose extends OpMode {
                         new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250))
                 ),
                 new InstantCommand(() -> gateSubsystem.open()),
-                new WaitUntilCommand(() -> shooterSubsystem.isAtSpeed(1250, 50)),
+                new WaitUntilCommand(() -> shooterSubsystem.atTargetVelocity()),
 
                 new RunIntakeCMD(intakeSubsystem, 1.0),
                 new WaitCommand(2000),
@@ -124,7 +124,7 @@ public class BlueClose extends OpMode {
                         new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250))
                 ),
                 new InstantCommand(() -> gateSubsystem.open()),
-                new WaitUntilCommand(() -> shooterSubsystem.isAtSpeed(1250, 50)),
+                new WaitUntilCommand(() -> shooterSubsystem.atTargetVelocity()),
 
                 new RunIntakeCMD(intakeSubsystem, 1.0),
                 new WaitCommand(2000),
