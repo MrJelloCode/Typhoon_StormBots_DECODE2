@@ -8,7 +8,7 @@ public class GateSubsystem {
     private final Servo gateServo;
 
     // Tunable positions
-    private double openPosition = 0.4;
+    private double openPosition = 0.5;
     private double closedPosition = 0.7;
 
     public GateSubsystem(HardwareMap hardwareMap) {
