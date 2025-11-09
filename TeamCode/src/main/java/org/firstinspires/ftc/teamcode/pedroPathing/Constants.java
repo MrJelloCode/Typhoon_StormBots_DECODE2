@@ -24,7 +24,7 @@ public class Constants {
             .centripetalScaling(0.006);
 
     public static MecanumConstants driveConstants = new MecanumConstants()
-            .maxPower(0.75)
+            .maxPower(0.35)
             .xVelocity(57.964169713632)
             .yVelocity(50.5166327977101072)
 

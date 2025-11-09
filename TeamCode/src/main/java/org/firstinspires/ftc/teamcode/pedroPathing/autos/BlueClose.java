@@ -23,9 +23,11 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.WaitUntilCommand;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
+import kotlin.time.Instant;
+
 @Autonomous(name = "Blue Close Auto", group = "Autonomous")
 @Configurable
-public class BlueClose extends OpMode {
+public class  BlueClose extends OpMode {
 
     private TelemetryManager panelsTelemetry;
     private Follower follower;
@@ -63,13 +65,32 @@ public class BlueClose extends OpMode {
                 new InstantCommand(() -> gateSubsystem.close()),
                 new ParallelCommandGroup(
                         new InstantCommand(() -> follower.followPath(paths.ToScoreInitial, true)),
-                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250))
+                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1275))
                 ),
                 new InstantCommand(() -> gateSubsystem.open()),
-                new WaitUntilCommand(() -> shooterSubsystem.atTargetVelocity()),
 
-                new RunIntakeCMD(intakeSubsystem, 1.0),
-                new WaitCommand(2000),
+                //First Ball
+                new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
+//                new WaitCommand(1000),
+                new InstantCommand(() -> intakeSubsystem.intakeIn()),
+                new WaitCommand(100),
+                new InstantCommand(() -> intakeSubsystem.stop()),
+
+                //2nd Ball
+                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1240)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
+
+                new InstantCommand(() -> intakeSubsystem.intakeIn()),
+                new WaitCommand(500),
+                new InstantCommand(() -> intakeSubsystem.stop()),
+
+                //3rd Ball
+
+                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
+
+                new InstantCommand(() -> intakeSubsystem.intakeIn()),
+                new WaitCommand(1000),
 
                 new InstantCommand(() -> intakeSubsystem.stop()),
                 new InstantCommand(() -> shooterSubsystem.stop()),
@@ -81,29 +102,51 @@ public class BlueClose extends OpMode {
                         new InstantCommand(() -> follower.followPath(paths.toAlignClose, true)),
                         new InstantCommand(() -> gateSubsystem.close())
                 ),
+                new WaitUntilCommand(() -> !follower.isBusy()),
+                new WaitCommand(1000),
                 new ParallelCommandGroup(
                         new InstantCommand(() -> follower.followPath(paths.toGrabClose, true)),
-                        new RunIntakeCMD(intakeSubsystem, 0.7)
+                        new InstantCommand(() -> intakeSubsystem.intakeIn())
                 ),
+                new WaitUntilCommand(() -> !follower.isBusy()),
                 new WaitCommand(1000),
                 new InstantCommand(() -> intakeSubsystem.stop()),
 
                 // 🟦 3️⃣ Shoot first grabbed balls
+
                 new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Shooting first grabbed balls")),
                 new ParallelCommandGroup(
                         new InstantCommand(() -> follower.followPath(paths.toScoreClose, true)),
                         new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250))
                 ),
                 new InstantCommand(() -> gateSubsystem.open()),
-                new WaitUntilCommand(() -> shooterSubsystem.atTargetVelocity()),
 
-                new RunIntakeCMD(intakeSubsystem, 1.0),
-                new WaitCommand(2000),
+                //First Ball
+                new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
+                new WaitCommand(500),
+                new InstantCommand(() -> intakeSubsystem.intakeIn()),
+                new WaitCommand(250),
+                new InstantCommand(() -> intakeSubsystem.stop()),
+
+                //2nd Ball
+                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1240)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
+
+                new InstantCommand(() -> intakeSubsystem.intakeIn()),
+                new WaitCommand(500),
+                new InstantCommand(() -> intakeSubsystem.stop()),
+
+                //3rd Ball
+
+                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
+
+                new InstantCommand(() -> intakeSubsystem.intakeIn()),
+                new WaitCommand(1000),
 
                 new InstantCommand(() -> intakeSubsystem.stop()),
                 new InstantCommand(() -> shooterSubsystem.stop()),
                 new InstantCommand(() -> gateSubsystem.close()),
-
                 // 🟦 4️⃣ Grab secondary balls
                 new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Grabbing secondary balls")),
                 new ParallelCommandGroup(
@@ -176,31 +219,32 @@ public class BlueClose extends OpMode {
             ToScoreInitial = follower
                     .pathBuilder()
                     .addPath(new BezierLine(new Pose(22.329, 124.063), new Pose(61.805, 82.035)))
-                    .setLinearHeadingInterpolation(Math.toRadians(-37), Math.toRadians(-35))
+                    .setLinearHeadingInterpolation(Math.toRadians(-37), Math.toRadians(-50))
                     .build();
 
             toAlignClose = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(61.805, 82.035), new Pose(43.009, 84.106)))
-                    .setLinearHeadingInterpolation(Math.toRadians(-35), Math.toRadians(180))
+                    .addPath(new BezierLine(new Pose(61.805, 82.035), new Pose(61.805, 78.106)))
+                    .setLinearHeadingInterpolation(Math.toRadians(-50), Math.toRadians(180))
                     .build();
 
             toGrabClose = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(43.009, 84.106), new Pose(16.726, 84.265)))
+                    .addPath(new BezierLine(new Pose(61.805, 78.106), new Pose(33.726, 78.265)))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .setTangentHeadingInterpolation()
                     .build();
 
             toScoreClose = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(16.726, 84.265), new Pose(62.442, 82.035)))
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-35))
+                    .addPath(new BezierLine(new Pose(33.726, 78.265), new Pose(62.442, 82.035)))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-42))
                     .build();
 
             toAlignSecondary = follower
                     .pathBuilder()
                     .addPath(new BezierLine(new Pose(62.442, 82.035), new Pose(49.899, 59.810)))
-                    .setLinearHeadingInterpolation(Math.toRadians(-35), Math.toRadians(180))
+                    .setLinearHeadingInterpolation(Math.toRadians(-42), Math.toRadians(180))
                     .build();
 
             toGrabSecondary = follower

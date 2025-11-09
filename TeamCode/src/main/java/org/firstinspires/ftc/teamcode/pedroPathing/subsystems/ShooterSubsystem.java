@@ -49,8 +49,7 @@ public class ShooterSubsystem {
 
     /** Check if both flywheels are within ±100 ticks/s of target. */
     public boolean atTargetVelocity() {
-        return Math.abs(shooter0.getVelocity() - targetVelocity) < 10 &&
-                Math.abs(shooter1.getVelocity() - targetVelocity) < 10;
+        return Math.abs(shooter0.getVelocity() - targetVelocity) < 50 && Math.abs(shooter1.getVelocity() - targetVelocity) < 50;
     }
 
     // --- Telemetry getters ---
