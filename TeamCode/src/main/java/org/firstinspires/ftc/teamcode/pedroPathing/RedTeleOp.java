@@ -25,7 +25,7 @@ public class RedTeleOp extends LinearOpMode {
 
 
     double frontLeftPower, backLeftPower, frontRightPower, backRightPower, slowMode;
-    public static double servoPosition = 0.7, shooterVelocity = 1250, powerFix = 0.6;
+    public static double servoPosition = 0.7, shooterVelocity = 1250, powerFix = 0.7;
 
 
 
@@ -70,8 +70,8 @@ public class RedTeleOp extends LinearOpMode {
                 imu.resetYaw();
             }
 
-            if (gamepad1.left_trigger > 0.1) slowMode = 0.4;
-            else if (gamepad1.right_trigger > 0.1) slowMode = 0.2;
+            if (gamepad1.left_trigger > 0.1) slowMode = 0.6;
+            else if (gamepad1.right_trigger > 0.1) slowMode = 0.6;
             else slowMode = 1.0;
 
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
