@@ -147,34 +147,34 @@ public class  BlueClose extends OpMode {
                 new InstantCommand(() -> intakeSubsystem.stop()),
                 new InstantCommand(() -> shooterSubsystem.stop()),
                 new InstantCommand(() -> gateSubsystem.close()),
-                // 🟦 4️⃣ Grab secondary balls
-                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Grabbing secondary balls")),
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> follower.followPath(paths.toAlignSecondary, true)),
-                        new InstantCommand(() -> gateSubsystem.close())
-                ),
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> follower.followPath(paths.toGrabSecondary, true)),
-                        new RunIntakeCMD(intakeSubsystem, 0.7)
-                ),
-                new WaitCommand(1000),
-                new InstantCommand(() -> intakeSubsystem.stop()),
-
-                // 🟦 5️⃣ Shoot secondary balls
-                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Shooting secondary balls")),
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> follower.followPath(paths.toScoreSecondary, true)),
-                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250))
-                ),
-                new InstantCommand(() -> gateSubsystem.open()),
-                new WaitUntilCommand(() -> shooterSubsystem.atTargetVelocity()),
-
-                new RunIntakeCMD(intakeSubsystem, 1.0),
-                new WaitCommand(2000),
-
-                new InstantCommand(() -> intakeSubsystem.stop()),
-                new InstantCommand(() -> shooterSubsystem.stop()),
-                new InstantCommand(() -> gateSubsystem.close()),
+//                // 🟦 4️⃣ Grab secondary balls
+//                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Grabbing secondary balls")),
+//                new ParallelCommandGroup(
+//                        new InstantCommand(() -> follower.followPath(paths.toAlignSecondary, true)),
+//                        new InstantCommand(() -> gateSubsystem.close())
+//                ),
+//                new ParallelCommandGroup(
+//                        new InstantCommand(() -> follower.followPath(paths.toGrabSecondary, true)),
+//                        new RunIntakeCMD(intakeSubsystem, 0.7)
+//                ),
+//                new WaitCommand(1000),
+//                new InstantCommand(() -> intakeSubsystem.stop()),
+//
+//                // 🟦 5️⃣ Shoot secondary balls
+//                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Shooting secondary balls")),
+//                new ParallelCommandGroup(
+//                        new InstantCommand(() -> follower.followPath(paths.toScoreSecondary, true)),
+//                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250))
+//                ),
+//                new InstantCommand(() -> gateSubsystem.open()),
+//                new WaitUntilCommand(() -> shooterSubsystem.atTargetVelocity()),
+//
+//                new RunIntakeCMD(intakeSubsystem, 1.0),
+//                new WaitCommand(2000),
+//
+//                new InstantCommand(() -> intakeSubsystem.stop()),
+//                new InstantCommand(() -> shooterSubsystem.stop()),
+//                new InstantCommand(() -> gateSubsystem.close()),
 
                 // 🟦 6️⃣ Park
                 new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Parking")),
@@ -210,9 +210,9 @@ public class  BlueClose extends OpMode {
         public PathChain toAlignClose;
         public PathChain toGrabClose;
         public PathChain toScoreClose;
-        public PathChain toAlignSecondary;
-        public PathChain toGrabSecondary;
-        public PathChain toScoreSecondary;
+//        public PathChain toAlignSecondary;
+//        public PathChain toGrabSecondary;
+//        public PathChain toScoreSecondary;
         public PathChain toPark;
 
         public Paths(Follower follower) {
@@ -238,31 +238,31 @@ public class  BlueClose extends OpMode {
             toScoreClose = follower
                     .pathBuilder()
                     .addPath(new BezierLine(new Pose(33.726, 78.265), new Pose(62.442, 82.035)))
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-42))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-50))
                     .build();
-
-            toAlignSecondary = follower
-                    .pathBuilder()
-                    .addPath(new BezierLine(new Pose(62.442, 82.035), new Pose(49.899, 59.810)))
-                    .setLinearHeadingInterpolation(Math.toRadians(-42), Math.toRadians(180))
-                    .build();
-
-            toGrabSecondary = follower
-                    .pathBuilder()
-                    .addPath(new BezierLine(new Pose(49.899, 59.810), new Pose(19.593, 59.257)))
-                    .setTangentHeadingInterpolation()
-                    .build();
-
-            toScoreSecondary = follower
-                    .pathBuilder()
-                    .addPath(new BezierLine(new Pose(19.593, 59.257), new Pose(61.646, 82.195)))
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-35))
-                    .build();
+//
+//            toAlignSecondary = follower
+//                    .pathBuilder()
+//                    .addPath(new BezierLine(new Pose(62.442, 82.035), new Pose(49.899, 59.810)))
+//                    .setLinearHeadingInterpolation(Math.toRadians(-42), Math.toRadians(180))
+//                    .build();
+//
+//            toGrabSecondary = follower
+//                    .pathBuilder()
+//                    .addPath(new BezierLine(new Pose(49.899, 59.810), new Pose(19.593, 59.257)))
+//                    .setTangentHeadingInterpolation()
+//                    .build();
+//
+//            toScoreSecondary = follower
+//                    .pathBuilder()
+//                    .addPath(new BezierLine(new Pose(19.593, 59.257), new Pose(61.646, 82.195)))
+//                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-35))
+//                    .build();
 
             toPark = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(61.646, 82.195), new Pose(53.204, 59.257)))
-                    .setLinearHeadingInterpolation(Math.toRadians(-35), Math.toRadians(180))
+                    .addPath(new BezierLine(new Pose(62.442, 82.035), new Pose(26.442477876106196, 83.30973451327434)))
+                    .setLinearHeadingInterpolation(Math.toRadians(-50), Math.toRadians(180))
                     .build();
         }
     }
