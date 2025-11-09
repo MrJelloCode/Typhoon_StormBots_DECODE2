@@ -147,7 +147,7 @@ public class BlueTeleOp extends LinearOpMode {
             // --- Mechanism controls (your original logic preserved) ---
             if ((gamepad2.right_trigger > 0.1) && (servoPosition == 0.5)) {
                 shooterVelocity = 1250;
-            } else if(-gamepad2.left_stick_y > 0.1){
+            } else if(-gamepad2.left_stick_y > 0.1 && (servoPosition == 0.5)){
                 shooterVelocity = 1350;
             } else {
                 shooterVelocity = 0;
