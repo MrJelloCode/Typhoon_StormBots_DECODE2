@@ -146,22 +146,20 @@ public class BlueTeleOp extends LinearOpMode {
 
             // --- Mechanism controls (your original logic preserved) ---
             if ((gamepad2.right_trigger > 0.1) && (servoPosition == 0.5)) {
-                shooter0.setVelocity(1250);
-                shooter1.setVelocity(1250);
+                shooterVelocity = 1250;
+            } else if(-gamepad2.left_stick_y > 0.1){
+                shooterVelocity = 1350;
             } else {
-                shooter0.setVelocity(0);
-                shooter1.setVelocity(0);
+                shooterVelocity = 0;
             }
 
-            if (gamepad2.dpad_left) {
-                shooter0.setVelocity(0);
-                shooter1.setVelocity(0);
-            }
+            shooter0.setVelocity(shooterVelocity);
+            shooter1.setVelocity(shooterVelocity);
 
             intake.setPower(-gamepad2.left_stick_y * powerFix);
 
             double avgVelocity = (shooter0.getVelocity() + shooter1.getVelocity()) / 2.0;
-            if (gamepad2.left_trigger > 0.1 && Math.abs(avgVelocity - shooterVelocity) < 10) {
+            if ((gamepad2.left_trigger > 0.1) && (Math.abs(avgVelocity - shooterVelocity) < 10) && (avgVelocity > 100)) {
                 intake.setPower(1);
             }
 
