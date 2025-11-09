@@ -123,9 +123,9 @@ public class  BlueClose extends OpMode {
 
                 //First Ball
                 new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
-                new WaitCommand(500),
+//                new WaitCommand(1000),
                 new InstantCommand(() -> intakeSubsystem.intakeIn()),
-                new WaitCommand(250),
+                new WaitCommand(100),
                 new InstantCommand(() -> intakeSubsystem.stop()),
 
                 //2nd Ball
@@ -147,6 +147,7 @@ public class  BlueClose extends OpMode {
                 new InstantCommand(() -> intakeSubsystem.stop()),
                 new InstantCommand(() -> shooterSubsystem.stop()),
                 new InstantCommand(() -> gateSubsystem.close()),
+
 //                // 🟦 4️⃣ Grab secondary balls
 //                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Grabbing secondary balls")),
 //                new ParallelCommandGroup(
