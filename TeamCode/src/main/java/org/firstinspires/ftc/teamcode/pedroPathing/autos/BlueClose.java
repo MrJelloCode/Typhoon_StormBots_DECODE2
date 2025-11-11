@@ -65,7 +65,7 @@ public class  BlueClose extends OpMode {
                 new InstantCommand(() -> gateSubsystem.close()),
                 new ParallelCommandGroup(
                         new InstantCommand(() -> follower.followPath(paths.ToScoreInitial, true)),
-                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1260))
+                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1300))
                 ),
                 new InstantCommand(() -> gateSubsystem.open()),
 
@@ -77,7 +77,7 @@ public class  BlueClose extends OpMode {
                 new InstantCommand(() -> intakeSubsystem.stop()),
 
                 //2nd Ball
-                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1230)),
+                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1260)),
                 new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
 
                 new InstantCommand(() -> intakeSubsystem.intakeIn()),
@@ -86,7 +86,7 @@ public class  BlueClose extends OpMode {
                 new WaitCommand(1000),
                 //3rd Ball
 
-                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1235)),
+                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1245)),
                 new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
 
                 new InstantCommand(() -> intakeSubsystem.intakeIn()),
@@ -263,7 +263,7 @@ public class  BlueClose extends OpMode {
 
             toPark = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(62.442, 82.035), new Pose(26.442477876106196, 83.30973451327434)))
+                    .addPath(new BezierLine(new Pose(62.442, 82.035), new Pose(50.442, 82.035)))
                     .setLinearHeadingInterpolation(Math.toRadians(-40), Math.toRadians(180))
                     .build();
         }

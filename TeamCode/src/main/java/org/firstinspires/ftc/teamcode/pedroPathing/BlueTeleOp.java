@@ -37,7 +37,7 @@ public class BlueTeleOp extends LinearOpMode {
     private boolean isAutoActive = false;  // True while robot is following a path
 
     // --- PREDEFINED FIELD POSITIONS ---
-    private final Pose START_POSE = new Pose(26.44, 83.31, Math.toRadians(180));
+    private final Pose START_POSE = new Pose(50.442, 82.035, Math.toRadians(180));
     private final Pose HOME_POSE = new Pose(105.29, 32.97, Math.toRadians(180));
     private final Pose RANGE_POSE = new Pose(62.44, 82.04, Math.toRadians(-50));
 
