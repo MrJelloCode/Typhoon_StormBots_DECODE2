@@ -31,7 +31,7 @@ public class BlueTeleOp extends LinearOpMode {
 
     // --- CONTROL VARIABLES ---
     double frontLeftPower, backLeftPower, frontRightPower, backRightPower, slowMode;
-    public static double servoPosition = 0.7, shooterVelocity = 1270, powerFix = 0.7;
+    public static double servoPosition = 0.7, shooterVelocity = 1270, powerFix = 0.7, slowTurn;
 
     // --- STATE FLAGS ---
     private boolean isAutoActive = false;  // True while robot is following a path
@@ -101,10 +101,15 @@ public class BlueTeleOp extends LinearOpMode {
             if (gamepad1.start) imu.resetYaw();
 
             // --- Slow mode control for precision driving ---
-            if (gamepad1.left_trigger > 0.1 || gamepad1.right_trigger > 0.1)
+            if (gamepad1.left_trigger > 0.1 || gamepad1.right_trigger > 0.1){
                 slowMode = 0.6;
-            else
+                slowTurn = 0.5;
+            }
+
+            else {
                 slowMode = 1.0;
+                slowTurn = 1.0;
+            }
 
             // ==================================================
             // PATH TRIGGER BUTTONS (AUTO MOVEMENT)
@@ -147,9 +152,9 @@ public class BlueTeleOp extends LinearOpMode {
             // MANUAL DRIVE CONTROL (only when auto not active)
             // ==================================================
             if (!isAutoActive) {
-                double y = -gamepad1.left_stick_y;   // Forward/back
+                double y = -gamepad1.left_stick_y ;   // Forward/back
                 double x = gamepad1.left_stick_x * 1.1; // Strafe
-                double rx = gamepad1.right_stick_x;  // Rotation
+                double rx = gamepad1.right_stick_x * slowTurn;  // Rotation
 
                 // --- Field-centric drive ---
                 double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
@@ -176,8 +181,8 @@ public class BlueTeleOp extends LinearOpMode {
             // --- SHOOTER CONTROL ---
             if ((gamepad2.right_trigger > 0.1) && (servoPosition == 0.5)) {
                 shooterVelocity = 1250; // Standard shot
-            } else if (-gamepad2.left_stick_y > 0.1 && (servoPosition == 0.5)) {
-                shooterVelocity = 1350; // Power shot
+            } else if (-gamepad2.right_stick_y > 0 && (servoPosition == 0.5)) {
+                shooterVelocity = 1450; // Power shot
             } else {
                 shooterVelocity = 0; // Stop shooter
             }
