@@ -1,11 +1,6 @@
 package org.firstinspires.ftc.teamcode.pedroPathing.autos;
 
-import com.arcrobotics.ftclib.command.CommandScheduler;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.ParallelCommandGroup;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
-import com.arcrobotics.ftclib.command.WaitUntilCommand;
+import com.arcrobotics.ftclib.command.*;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
@@ -21,9 +16,9 @@ import org.firstinspires.ftc.teamcode.pedroPathing.subsystems.GateSubsystem;
 import org.firstinspires.ftc.teamcode.pedroPathing.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.pedroPathing.subsystems.ShooterSubsystem;
 
-@Autonomous(name = "Blue Far Auto", group = "Autonomous")
+@Autonomous(name = "Red Far Auto", group = "Autonomous")
 @Configurable
-public class BlueFar extends OpMode {
+public class RedFar extends OpMode {
 
     private TelemetryManager panelsTelemetry;
     private Follower follower;
@@ -41,7 +36,9 @@ public class BlueFar extends OpMode {
         panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
         follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(new Pose(56, 8, Math.toRadians(270)));
+
+        // ✅ Mirrored starting pose
+        follower.setStartingPose(new Pose(88, 8, Math.toRadians(90)));
 
         paths = new Paths(follower);
 
@@ -52,11 +49,10 @@ public class BlueFar extends OpMode {
         panelsTelemetry.debug("Status", "Initialized");
         panelsTelemetry.update(telemetry);
     }
+
     @Override
     public void start() {
         scheduler.schedule(new SequentialCommandGroup(
-
-                // 🟦 1️⃣ Score initial preload
                 new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Scoring initial preload")),
                 new InstantCommand(() -> gateSubsystem.close()),
                 new ParallelCommandGroup(
@@ -65,34 +61,26 @@ public class BlueFar extends OpMode {
                 ),
                 new InstantCommand(() -> gateSubsystem.open()),
 
-                //First Ball
                 new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
-//                new WaitCommand(1000),
                 new InstantCommand(() -> intakeSubsystem.intakeIn()),
                 new WaitCommand(500),
                 new InstantCommand(() -> intakeSubsystem.stop()),
 
-                //2nd Ball
                 new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1460)),
                 new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
-
                 new InstantCommand(() -> intakeSubsystem.intakeIn()),
                 new WaitCommand(500),
                 new InstantCommand(() -> intakeSubsystem.stop()),
                 new WaitCommand(1000),
-                //3rd Ball
 
                 new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1440)),
                 new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
-
                 new InstantCommand(() -> intakeSubsystem.intakeIn()),
                 new WaitCommand(1000),
-
                 new InstantCommand(() -> intakeSubsystem.stop()),
                 new InstantCommand(() -> shooterSubsystem.stop()),
                 new InstantCommand(() -> gateSubsystem.close()),
 
-                // 🟦 2️⃣ Grab first set of balls
                 new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Grabbing first set of balls")),
                 new ParallelCommandGroup(
                         new InstantCommand(() -> follower.followPath(paths.toAlignClose, true)),
@@ -108,8 +96,6 @@ public class BlueFar extends OpMode {
                 new WaitCommand(1000),
                 new InstantCommand(() -> intakeSubsystem.stop()),
 
-                // 🟦 3️⃣ Shoot first grabbed balls
-
                 new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Shooting first grabbed balls")),
                 new ParallelCommandGroup(
                         new InstantCommand(() -> follower.followPath(paths.toScoreClose, true)),
@@ -117,64 +103,25 @@ public class BlueFar extends OpMode {
                 ),
                 new InstantCommand(() -> gateSubsystem.open()),
 
-                //First Ball
                 new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
-//                new WaitCommand(1000),
                 new InstantCommand(() -> intakeSubsystem.intakeIn()),
                 new WaitCommand(500),
                 new InstantCommand(() -> intakeSubsystem.stop()),
 
-                //2nd Ball
                 new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1440)),
                 new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
-
                 new InstantCommand(() -> intakeSubsystem.intakeIn()),
                 new WaitCommand(500),
                 new InstantCommand(() -> intakeSubsystem.stop()),
 
-                //3rd Ball
-
                 new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1440)),
                 new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
-
                 new InstantCommand(() -> intakeSubsystem.intakeIn()),
                 new WaitCommand(1000),
-
                 new InstantCommand(() -> intakeSubsystem.stop()),
                 new InstantCommand(() -> shooterSubsystem.stop()),
                 new InstantCommand(() -> gateSubsystem.close()),
 
-
-//                // 🟦 4️⃣ Grab secondary balls
-//                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Grabbing secondary balls")),
-//                new ParallelCommandGroup(
-//                        new InstantCommand(() -> follower.followPath(paths.toAlignSecondary, true)),
-//                        new InstantCommand(() -> gateSubsystem.close())
-//                ),
-//                new ParallelCommandGroup(
-//                        new InstantCommand(() -> follower.followPath(paths.toGrabSecondary, true)),
-//                        new RunIntakeCMD(intakeSubsystem, 0.7)
-//                ),
-//                new WaitCommand(1000),
-//                new InstantCommand(() -> intakeSubsystem.stop()),
-//
-//                // 🟦 5️⃣ Shoot secondary balls
-//                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Shooting secondary balls")),
-//                new ParallelCommandGroup(
-//                        new InstantCommand(() -> follower.followPath(paths.toScoreSecondary, true)),
-//                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250))
-//                ),
-//                new InstantCommand(() -> gateSubsystem.open()),
-//                new WaitUntilCommand(() -> shooterSubsystem.atTargetVelocity()),
-//
-//                new RunIntakeCMD(intakeSubsystem, 1.0),
-//                new WaitCommand(2000),
-//
-//                new InstantCommand(() -> intakeSubsystem.stop()),
-//                new InstantCommand(() -> shooterSubsystem.stop()),
-//                new InstantCommand(() -> gateSubsystem.close()),
-
-                // 🟦 6️⃣ Park
                 new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Parking")),
                 new InstantCommand(() -> follower.followPath(paths.toPark, true)),
                 new WaitCommand(1000),
@@ -187,7 +134,6 @@ public class BlueFar extends OpMode {
                 })
         ));
     }
-
 
     @Override
     public void loop() {
@@ -202,65 +148,55 @@ public class BlueFar extends OpMode {
         panelsTelemetry.update(telemetry);
     }
 
-    // ✅ Paths
+    // ✅ Mirrored Paths (x' = 144 - x)
     public static class Paths {
         public PathChain ToScoreInitial;
         public PathChain toAlignClose;
         public PathChain toGrabClose;
         public PathChain toScoreClose;
-//        public PathChain toAlignSecondary;
-//        public PathChain toGrabSecondary;
-//        public PathChain toScoreSecondary;
         public PathChain toPark;
 
         public Paths(Follower follower) {
+
             ToScoreInitial = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(56, 8), new Pose(62.316455696202524, 19.481012658227854)))
-                    .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(300))
+                    .addPath(new BezierLine(
+                            new Pose(88, 8),
+                            new Pose(81.68354430379748, 19.481012658227854)))
+                    .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(240))
                     .build();
 
             toAlignClose = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(62.316455696202524, 19.481012658227854), new Pose(58.10126582278481, 36)))
-                    .setLinearHeadingInterpolation(Math.toRadians(300), Math.toRadians(180))
+                    .addPath(new BezierLine(
+                            new Pose(81.68354430379748, 19.481012658227854),
+                            new Pose(85.89873417721519, 34)))
+                    .setLinearHeadingInterpolation(Math.toRadians(240), Math.toRadians(0))
                     .build();
 
             toGrabClose = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(58.10126582278481, 36), new Pose(11.278481012658228, 35.88607594936709)))
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
+                    .addPath(new BezierLine(
+                            new Pose(85.89873417721519, 34),
+                            new Pose(132.72151898734177, 34)))
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .setTangentHeadingInterpolation()
                     .build();
 
             toScoreClose = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(11.278481012658228, 35.88607594936709), new Pose(62.316455696202524, 19.481012658227854683544303797476)))
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(300))
+                    .addPath(new BezierLine(
+                            new Pose(132.72151898734177, 35.88607594936709),
+                            new Pose(81.68354430379748, 19.481012658227854)))
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(120))
                     .build();
-//
-//            toAlignSecondary = follower
-//                    .pathBuilder()
-//                    .addPath(new BezierLine(new Pose(62.442, 82.035), new Pose(49.899, 59.810)))
-//                    .setLinearHeadingInterpolation(Math.toRadians(-42), Math.toRadians(180))
-//                    .build();
-//
-//            toGrabSecondary = follower
-//                    .pathBuilder()
-//                    .addPath(new BezierLine(new Pose(49.899, 59.810), new Pose(19.593, 59.257)))
-//                    .setTangentHeadingInterpolation()
-//                    .build();
-//
-//            toScoreSecondary = follower
-//                    .pathBuilder()
-//                    .addPath(new BezierLine(new Pose(19.593, 59.257), new Pose(61.646, 82.195)))
-//                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-35))
-//                    .build();
 
             toPark = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(62.316455696202524, 19.481012658227854), new Pose(43.063291139240505, 39.98734177215191)))
-                    .setLinearHeadingInterpolation(Math.toRadians(300), Math.toRadians(180))
+                    .addPath(new BezierLine(
+                            new Pose(81.68354430379748, 19.481012658227854),
+                            new Pose(100.9367088607595, 19.481012658227854)))
+                    .setLinearHeadingInterpolation(Math.toRadians(120), Math.toRadians(0))
                     .build();
         }
     }
