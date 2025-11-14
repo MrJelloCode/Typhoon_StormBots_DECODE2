@@ -58,31 +58,31 @@ public class BlueFar extends OpMode {
 
                 // 🟦 1️⃣ Score initial preload
                 new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Scoring initial preload")),
-                new InstantCommand(() -> gateSubsystem.close()),
+//                new InstantCommand(() -> gateSubsystem.close()),
                 new ParallelCommandGroup(
                         new InstantCommand(() -> follower.followPath(paths.ToScoreInitial, true)),
-                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1460))
+                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1490))
                 ),
                 new InstantCommand(() -> gateSubsystem.open()),
 
                 //First Ball
                 new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
-//                new WaitCommand(1000),
+//                new WaitCommand(1000),f c
                 new InstantCommand(() -> intakeSubsystem.intakeIn()),
-                new WaitCommand(500),
+                new WaitCommand(180),
                 new InstantCommand(() -> intakeSubsystem.stop()),
 
                 //2nd Ball
-                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1460)),
+                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1410)),
                 new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
 
                 new InstantCommand(() -> intakeSubsystem.intakeIn()),
-                new WaitCommand(500),
+                new WaitCommand(125),
                 new InstantCommand(() -> intakeSubsystem.stop()),
                 new WaitCommand(1000),
                 //3rd Ball
 
-                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1440)),
+                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1410)),
                 new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
 
                 new InstantCommand(() -> intakeSubsystem.intakeIn()),
@@ -91,6 +91,25 @@ public class BlueFar extends OpMode {
                 new InstantCommand(() -> intakeSubsystem.stop()),
                 new InstantCommand(() -> shooterSubsystem.stop()),
                 new InstantCommand(() -> gateSubsystem.close()),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 // 🟦 2️⃣ Grab first set of balls
                 new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Grabbing first set of balls")),
@@ -105,7 +124,7 @@ public class BlueFar extends OpMode {
                         new InstantCommand(() -> intakeSubsystem.intakeIn())
                 ),
                 new WaitUntilCommand(() -> !follower.isBusy()),
-                new WaitCommand(1000),
+                new WaitCommand(1250),
                 new InstantCommand(() -> intakeSubsystem.stop()),
 
                 // 🟦 3️⃣ Shoot first grabbed balls
@@ -113,28 +132,31 @@ public class BlueFar extends OpMode {
                 new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Shooting first grabbed balls")),
                 new ParallelCommandGroup(
                         new InstantCommand(() -> follower.followPath(paths.toScoreClose, true)),
-                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1440))
+                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1465))
                 ),
-                new InstantCommand(() -> gateSubsystem.open()),
+
+
 
                 //First Ball
                 new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
+                new InstantCommand(() -> gateSubsystem.open()),
+                new WaitCommand(1000),
 //                new WaitCommand(1000),
                 new InstantCommand(() -> intakeSubsystem.intakeIn()),
-                new WaitCommand(500),
+                new WaitCommand(150),
                 new InstantCommand(() -> intakeSubsystem.stop()),
 
                 //2nd Ball
-                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1440)),
+                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1410)),
                 new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
 
                 new InstantCommand(() -> intakeSubsystem.intakeIn()),
-                new WaitCommand(500),
+                new WaitCommand(125),
                 new InstantCommand(() -> intakeSubsystem.stop()),
 
                 //3rd Ball
 
-                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1440)),
+                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1400)),
                 new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
 
                 new InstantCommand(() -> intakeSubsystem.intakeIn()),
@@ -145,34 +167,61 @@ public class BlueFar extends OpMode {
                 new InstantCommand(() -> gateSubsystem.close()),
 
 
-//                // 🟦 4️⃣ Grab secondary balls
-//                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Grabbing secondary balls")),
-//                new ParallelCommandGroup(
-//                        new InstantCommand(() -> follower.followPath(paths.toAlignSecondary, true)),
-//                        new InstantCommand(() -> gateSubsystem.close())
-//                ),
-//                new ParallelCommandGroup(
-//                        new InstantCommand(() -> follower.followPath(paths.toGrabSecondary, true)),
-//                        new RunIntakeCMD(intakeSubsystem, 0.7)
-//                ),
+                // 🟦 4️⃣ Grab secondary balls
+                // 🟦 2️⃣ Grab first set of balls
+                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Grabbing first set of balls")),
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> follower.followPath(paths.toAlignSecondary, true)),
+                        new InstantCommand(() -> gateSubsystem.close())
+                ),
+                new WaitUntilCommand(() -> !follower.isBusy()),
+                new WaitCommand(1000),
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> follower.followPath(paths.toGrabSecondary, true)),
+                        new InstantCommand(() -> intakeSubsystem.intakeIn())
+                ),
+                new WaitUntilCommand(() -> !follower.isBusy()),
+                new WaitCommand(1250),
+                new InstantCommand(() -> intakeSubsystem.stop()),
+
+
+                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Shooting first grabbed balls")),
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> follower.followPath(paths.toScoreSecondary, true)),
+                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1465))
+                ),
+
+
+
+                //First Ball
+                new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
+                new InstantCommand(() -> gateSubsystem.open()),
+                new WaitCommand(1000),
 //                new WaitCommand(1000),
-//                new InstantCommand(() -> intakeSubsystem.stop()),
-//
-//                // 🟦 5️⃣ Shoot secondary balls
-//                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Shooting secondary balls")),
-//                new ParallelCommandGroup(
-//                        new InstantCommand(() -> follower.followPath(paths.toScoreSecondary, true)),
-//                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1250))
-//                ),
-//                new InstantCommand(() -> gateSubsystem.open()),
-//                new WaitUntilCommand(() -> shooterSubsystem.atTargetVelocity()),
-//
-//                new RunIntakeCMD(intakeSubsystem, 1.0),
-//                new WaitCommand(2000),
-//
-//                new InstantCommand(() -> intakeSubsystem.stop()),
-//                new InstantCommand(() -> shooterSubsystem.stop()),
-//                new InstantCommand(() -> gateSubsystem.close()),
+                new InstantCommand(() -> intakeSubsystem.intakeIn()),
+                new WaitCommand(150),
+                new InstantCommand(() -> intakeSubsystem.stop()),
+
+                //2nd Ball
+                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1420)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
+
+                new InstantCommand(() -> intakeSubsystem.intakeIn()),
+                new WaitCommand(100),
+                new InstantCommand(() -> intakeSubsystem.stop()),
+
+                //3rd Ball
+
+                new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1425)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooterSubsystem.atTargetVelocity()),
+
+                new InstantCommand(() -> intakeSubsystem.intakeIn()),
+                new WaitCommand(1000),
+
+                new InstantCommand(() -> intakeSubsystem.stop()),
+                new InstantCommand(() -> shooterSubsystem.stop()),
+                new InstantCommand(() -> gateSubsystem.close()),
+
 
                 // 🟦 6️⃣ Park
                 new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Parking")),
@@ -208,59 +257,59 @@ public class BlueFar extends OpMode {
         public PathChain toAlignClose;
         public PathChain toGrabClose;
         public PathChain toScoreClose;
-//        public PathChain toAlignSecondary;
-//        public PathChain toGrabSecondary;
-//        public PathChain toScoreSecondary;
+        public PathChain toAlignSecondary;
+        public PathChain toGrabSecondary;
+        public PathChain toScoreSecondary;
         public PathChain toPark;
 
         public Paths(Follower follower) {
             ToScoreInitial = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(56, 8), new Pose(62.316455696202524, 19.481012658227854)))
-                    .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(300))
+                    .addPath(new BezierLine(new Pose(56, 8), new Pose(52, 19.481012658227854)))
+                    .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(295))
                     .build();
 
             toAlignClose = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(62.316455696202524, 19.481012658227854), new Pose(58.10126582278481, 36)))
-                    .setLinearHeadingInterpolation(Math.toRadians(300), Math.toRadians(180))
+                    .addPath(new BezierLine(new Pose(52, 19.481012658227854), new Pose(58.10126582278481, 25)))
+                    .setLinearHeadingInterpolation(Math.toRadians(295), Math.toRadians(180))
                     .build();
 
             toGrabClose = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(58.10126582278481, 36), new Pose(11.278481012658228, 35.88607594936709)))
+                    .addPath(new BezierLine(new Pose(58.10126582278481, 25), new Pose(23, 25)))
                     .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .setTangentHeadingInterpolation()
                     .build();
 
             toScoreClose = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(11.278481012658228, 35.88607594936709), new Pose(62.316455696202524, 19.481012658227854683544303797476)))
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(300))
+                    .addPath(new BezierLine(new Pose(23, 25), new Pose(56, 19.481012658227854683544303797476)))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(295))
                     .build();
-//
-//            toAlignSecondary = follower
-//                    .pathBuilder()
-//                    .addPath(new BezierLine(new Pose(62.442, 82.035), new Pose(49.899, 59.810)))
-//                    .setLinearHeadingInterpolation(Math.toRadians(-42), Math.toRadians(180))
-//                    .build();
-//
-//            toGrabSecondary = follower
-//                    .pathBuilder()
-//                    .addPath(new BezierLine(new Pose(49.899, 59.810), new Pose(19.593, 59.257)))
-//                    .setTangentHeadingInterpolation()
-//                    .build();
-//
-//            toScoreSecondary = follower
-//                    .pathBuilder()
-//                    .addPath(new BezierLine(new Pose(19.593, 59.257), new Pose(61.646, 82.195)))
-//                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(-35))
-//                    .build();
+
+            toAlignSecondary = follower
+                    .pathBuilder()
+                    .addPath(new BezierLine(new Pose(52, 19.481012658227854), new Pose(58.10126582278481, 49)))
+                    .setLinearHeadingInterpolation(Math.toRadians(295), Math.toRadians(180))
+                    .build();
+
+            toGrabSecondary = follower
+                    .pathBuilder()
+                    .addPath(new BezierLine(new Pose(58.10126582278481, 49), new Pose(23, 49)))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
+                    .build();
+
+            toScoreSecondary = follower
+                    .pathBuilder()
+                    .addPath(new BezierLine(new Pose(23, 49), new Pose(56, 19.481012658227854683544303797476)))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(293))
+                    .build();
 
             toPark = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(62.316455696202524, 19.481012658227854), new Pose(43.063291139240505, 39.98734177215191)))
-                    .setLinearHeadingInterpolation(Math.toRadians(300), Math.toRadians(180))
+                    .addPath(new BezierLine(new Pose(52, 19.481012658227854), new Pose(43.063291139240505, 39.98734177215191)))
+                    .setLinearHeadingInterpolation(Math.toRadians(293), Math.toRadians(180))
                     .build();
         }
     }
