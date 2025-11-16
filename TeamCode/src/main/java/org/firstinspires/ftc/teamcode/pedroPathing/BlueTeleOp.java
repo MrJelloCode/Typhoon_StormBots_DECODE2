@@ -120,6 +120,7 @@ public class BlueTeleOp extends LinearOpMode {
 
 
 
+
             // --- Update Pedro follower every loop ---
             // Even when driving manually, this keeps tracking robot position.
             follower.update();
@@ -208,8 +209,10 @@ public class BlueTeleOp extends LinearOpMode {
                 shooterVelocity = 1250; // Standard shot
             } else if (-gamepad2.right_stick_y > 0 && (servoPosition == 0.5)) {
                 shooterVelocity = 1450; // Power shot
-            } else {
-                shooterVelocity = 0; // Stop shooter
+            } else if(gamepad2.x){
+                shooterVelocity = -20000; // Stop shooter
+            } else{
+                shooterVelocity = 0;
             }
 
             shooter0.setVelocity(shooterVelocity);
@@ -244,6 +247,27 @@ public class BlueTeleOp extends LinearOpMode {
 
                 }
 
+
+                if (gamepad1.b) { // while A is held, do auto-align
+// ---------- PROPORTIONAL CONTROLLER ----------
+                    double rx = 0.08 * tx; // basic P control
+
+// if power is too small to move the robot, but we're still outside tolerance,
+// give it a minimum nudge (preserve direction with copySign)
+                    if (Math.abs(rx) < MIN_POWER && Math.abs(tx) > TX_TOLERANCE) {
+                        rx = Math.copySign(MIN_POWER, rx);
+
+                    }
+
+
+                    frontLeftMotor.setPower(rx);
+                    backLeftMotor.setPower(rx);
+                    frontRightMotor.setPower(-rx);
+                    backRightMotor.setPower(-rx);
+
+                }
+            }
+
                 // Feed only when shooters are up to speed
                 double avgVelocity = (shooter0.getVelocity() + shooter1.getVelocity()) / 2.0;
                 if ((gamepad2.left_trigger > 0.1)
@@ -262,7 +286,7 @@ public class BlueTeleOp extends LinearOpMode {
                 telemetry.addData("Shooter Velocity", avgVelocity);
                 telemetry.addData("Target Velocity", shooterVelocity);
                 telemetry.update();
-            }
+
         }
     }
 }

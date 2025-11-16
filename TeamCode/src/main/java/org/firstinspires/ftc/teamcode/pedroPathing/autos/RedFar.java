@@ -64,7 +64,7 @@ public class RedFar extends OpMode {
                 new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Scoring initial preload")),
                 new ParallelCommandGroup(
                         new InstantCommand(() -> follower.followPath(paths.ToScoreInitial, true)),
-                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1490))
+                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1475))
                 ),
                 new InstantCommand(() -> gateSubsystem.open()),
 
@@ -225,23 +225,23 @@ public class RedFar extends OpMode {
                     .pathBuilder()
                     .addPath(new BezierLine(
                             new Pose(88, 8),
-                            new Pose(92, 19.481012658227854)))
-                    .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(245))
+                            new Pose(92, 19)))
+                    .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(240))
                     .build();
 
             toAlignClose = follower
                     .pathBuilder()
                     .addPath(new BezierLine(
-                            new Pose(92, 19.481012658227854),
-                            new Pose(85.89873417721519, 25)))
-                    .setLinearHeadingInterpolation(Math.toRadians(245), Math.toRadians(0))
+                            new Pose(92, 19),
+                            new Pose(85.89873417721519, 23)))
+                    .setLinearHeadingInterpolation(Math.toRadians(240), Math.toRadians(0))
                     .build();
 
             toGrabClose = follower
                     .pathBuilder()
                     .addPath(new BezierLine(
-                            new Pose(85.89873417721519, 25),
-                            new Pose(121, 25)))
+                            new Pose(85.89873417721519, 23),
+                            new Pose(121, 23)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .setTangentHeadingInterpolation()
                     .build();
@@ -249,39 +249,39 @@ public class RedFar extends OpMode {
             toScoreClose = follower
                     .pathBuilder()
                     .addPath(new BezierLine(
-                            new Pose(121, 25),
-                            new Pose(88, 19.481012658227854)))
-                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(245))
+                            new Pose(121, 23),
+                            new Pose(88, 19)))
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(240))
                     .build();
 
             toAlignSecondary = follower
                     .pathBuilder()
                     .addPath(new BezierLine(
-                            new Pose(92, 19.481012658227854),
-                            new Pose(85.89873417721519, 49)))
-                    .setLinearHeadingInterpolation(Math.toRadians(245), Math.toRadians(0))
+                            new Pose(92, 19),
+                            new Pose(85.89873417721519, 45)))
+                    .setLinearHeadingInterpolation(Math.toRadians(240), Math.toRadians(0))
                     .build();
 
             toGrabSecondary = follower
                     .pathBuilder()
                     .addPath(new BezierLine(
-                            new Pose(85.89873417721519, 49),
-                            new Pose(121, 49)))
+                            new Pose(85.89873417721519, 45),
+                            new Pose(121, 45)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
 
             toScoreSecondary = follower
                     .pathBuilder()
                     .addPath(new BezierLine(
-                            new Pose(121, 49),
-                            new Pose(88, 19.481012658227854)))
+                            new Pose(121, 45),
+                            new Pose(88, 17)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(245))
                     .build();
 
             toPark = follower
                     .pathBuilder()
                     .addPath(new BezierLine(
-                            new Pose(92, 19.481012658227854),
+                            new Pose(92, 17),
                             new Pose(100.9367088607595, 39.98734177215191)))
                     .setLinearHeadingInterpolation(Math.toRadians(245), Math.toRadians(0))
                     .build();

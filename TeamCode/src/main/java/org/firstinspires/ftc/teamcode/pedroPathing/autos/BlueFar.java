@@ -61,7 +61,7 @@ public class BlueFar extends OpMode {
 //                new InstantCommand(() -> gateSubsystem.close()),
                 new ParallelCommandGroup(
                         new InstantCommand(() -> follower.followPath(paths.ToScoreInitial, true)),
-                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1490))
+                        new InstantCommand(() -> shooterSubsystem.setTargetVelocity(1480))
                 ),
                 new InstantCommand(() -> gateSubsystem.open()),
 
@@ -265,14 +265,14 @@ public class BlueFar extends OpMode {
         public Paths(Follower follower) {
             ToScoreInitial = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(56, 8), new Pose(52, 19.481012658227854)))
-                    .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(295))
+                    .addPath(new BezierLine(new Pose(56, 8), new Pose(52, 19)))
+                    .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(290))
                     .build();
 
             toAlignClose = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(52, 19.481012658227854), new Pose(58.10126582278481, 25)))
-                    .setLinearHeadingInterpolation(Math.toRadians(295), Math.toRadians(180))
+                    .addPath(new BezierLine(new Pose(52, 19), new Pose(58.10126582278481, 25)))
+                    .setLinearHeadingInterpolation(Math.toRadians(290), Math.toRadians(180))
                     .build();
 
             toGrabClose = follower
@@ -284,14 +284,14 @@ public class BlueFar extends OpMode {
 
             toScoreClose = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(23, 25), new Pose(56, 19.481012658227854683544303797476)))
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(295))
+                    .addPath(new BezierLine(new Pose(23, 25), new Pose(56, 19)))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(290))
                     .build();
 
             toAlignSecondary = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(52, 19.481012658227854), new Pose(58.10126582278481, 49)))
-                    .setLinearHeadingInterpolation(Math.toRadians(295), Math.toRadians(180))
+                    .addPath(new BezierLine(new Pose(52, 19), new Pose(58.10126582278481, 49)))
+                    .setLinearHeadingInterpolation(Math.toRadians(290), Math.toRadians(180))
                     .build();
 
             toGrabSecondary = follower
@@ -302,13 +302,13 @@ public class BlueFar extends OpMode {
 
             toScoreSecondary = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(23, 49), new Pose(56, 19.481012658227854683544303797476)))
+                    .addPath(new BezierLine(new Pose(23, 49), new Pose(56, 19)))
                     .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(293))
                     .build();
 
             toPark = follower
                     .pathBuilder()
-                    .addPath(new BezierLine(new Pose(52, 19.481012658227854), new Pose(43.063291139240505, 39.98734177215191)))
+                    .addPath(new BezierLine(new Pose(52, 19), new Pose(43.063291139240505, 39.98734177215191)))
                     .setLinearHeadingInterpolation(Math.toRadians(293), Math.toRadians(180))
                     .build();
         }
