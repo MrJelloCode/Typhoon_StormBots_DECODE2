@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.pedroPathing;
+package org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.changes;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.drawOnlyCurrent;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.draw;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.follower;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.stopRobot;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.telemetryM;
+import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.Tuning.changes;
+import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.Tuning.drawOnlyCurrent;
+import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.Tuning.draw;
+import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.Tuning.follower;
+import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.Tuning.stopRobot;
+import static org.firstinspires.ftc.teamcode.pedroPathing.Constants.Tuning.telemetryM;
 
 import com.bylazar.configurables.PanelsConfigurables;
 import com.bylazar.configurables.annotations.Configurable;
@@ -78,10 +78,10 @@ public class Tuning extends SelectableOpMode {
     @Override
     public void onSelect() {
         if (follower == null) {
-            follower = Constants.createFollower(hardwareMap);
+            follower = AutoConstants.createFollower(hardwareMap);
             PanelsConfigurables.INSTANCE.refreshClass(this);
         } else {
-            follower = Constants.createFollower(hardwareMap);
+            follower = AutoConstants.createFollower(hardwareMap);
         }
 
         follower.setStartingPose(new Pose());

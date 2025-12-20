@@ -1,50 +1,47 @@
 package org.firstinspires.ftc.teamcode.pedroPathing.subsystems;
 
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import com.qualcomm.robotcore.hardware.*;
+import org.firstinspires.ftc.robotcore.external.navigation.*;
+
 
 public class Drivetrain {
-    private DcMotor frontLeft, frontRight, backLeft, backRight;
+    private DcMotorEx frontLeft, frontRight, backLeft, backRight;
     private IMU imu;
-    private double heading;
 
-    public Drivetrain(HardwareMap hardwareMap) {
-        frontLeft  = hardwareMap.get(DcMotor.class, "frontLeftMotor");
-        frontRight = hardwareMap.get(DcMotor.class, "frontRightMotor");
-        backLeft   = hardwareMap.get(DcMotor.class, "backLeftMotor");
-        backRight  = hardwareMap.get(DcMotor.class, "backRightMotor");
 
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
+    public Drivetrain(HardwareMap hw) {
+        frontLeft = hw.get(DcMotorEx.class, "frontLeft");
+        frontRight = hw.get(DcMotorEx.class, "frontRight");
+        backLeft = hw.get(DcMotorEx.class, "backLeft");
+        backRight = hw.get(DcMotorEx.class, "backRight");
 
-        imu = hardwareMap.get(IMU.class, "imu");
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD,
-                RevHubOrientationOnRobot.UsbFacingDirection.UP));
-        imu.initialize(parameters);
+
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+        imu = hw.get(IMU.class, "imu");
     }
 
-    public void update() {
-        heading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-    }
 
-    public void driveFieldCentric(double y, double x, double rx) {
-        double rotX = x * Math.cos(-heading) - y * Math.sin(-heading);
-        double rotY = x * Math.sin(-heading) + y * Math.cos(-heading);
+    public void fieldCentricDrive(Gamepad gamepad, double slowMode, double slowTurn) {
+        double y = -gamepad.left_stick_y;
+        double x = gamepad.left_stick_x * 1.1;
+        double rx = gamepad.right_stick_x * slowTurn;
+
+
+        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+        double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
         rotX *= 1.1;
 
-        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
-        frontLeft.setPower((rotY + rotX + rx) / denominator);
-        backLeft.setPower((rotY - rotX + rx) / denominator);
-        frontRight.setPower((rotY - rotX - rx) / denominator);
-        backRight.setPower((rotY + rotX - rx) / denominator);
-    }
 
-    public void resetIMU(){
-        imu.resetYaw();
+        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+
+
+        frontLeft.setPower((rotY + rotX + rx) / denominator * slowMode);
+        backLeft.setPower((rotY - rotX + rx) / denominator * slowMode);
+        frontRight.setPower((rotY - rotX - rx) / denominator * slowMode);
+        backRight.setPower((rotY + rotX - rx) / denominator * slowMode);
     }
 }
