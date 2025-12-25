@@ -10,17 +10,20 @@ public class Drivetrain {
 
 
     public Drivetrain(HardwareMap hw) {
-        frontLeft = hw.get(DcMotorEx.class, "frontLeft");
-        frontRight = hw.get(DcMotorEx.class, "frontRight");
-        backLeft = hw.get(DcMotorEx.class, "backLeft");
-        backRight = hw.get(DcMotorEx.class, "backRight");
+        frontLeft = hw.get(DcMotorEx.class, "FL");
+        frontRight = hw.get(DcMotorEx.class, "FR");
+        backLeft = hw.get(DcMotorEx.class, "BL");
+        backRight = hw.get(DcMotorEx.class, "BR");
 
 
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
         imu = hw.get(IMU.class, "imu");
+
     }
 
 
