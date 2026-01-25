@@ -4,21 +4,46 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+/**
+ * Streamlined Limelight-based shooter helper
+ * Focused on geometry + hood angle + flywheel size
+ */
 public class Limelight {
 
     private Limelight3A limelight;
     private double tx, ty, ta;
     private boolean hasTarget;
 
-    // 🔧 Tunable Constants
-    public double targetHeightInches = 51.0;    // Height of target (in)
-    public double shooterHeightInches = 14.0;   // Height of shooter (in)
-    public double shooterAngleDegrees = 45.0;   // Angle of shooter
-    public double aimOffsetInches = 10.0;       // Aim above target (in)
-    public double flywheelDiameterInches = 4.0; // Shooter flywheel diameter (in)
-    public double distanceOffsetInches = 0.0;   // For tuning (to adjust distance calc)
+    /* =====================
+       CAMERA / GEOMETRY
+       ===================== */
 
-    private static final double GRAVITY = 386.09; // in/s²
+    public double limelightHeightInches = 14.0;
+    public double limelightPitchDegrees = 15.0; // camera tilt up
+
+    public double targetHeightInches = 30.0;
+
+    /* =====================
+       SHOOTER GEOMETRY
+       ===================== */
+
+    public double shooterHeightInches = 14.0;   // separate for tuning
+    public double hoodAngleDegrees = 55.0;      // ball exit angle
+
+    /* =====================
+       FLYWHEEL
+       ===================== */
+
+    public double flywheelDiameterInches = 3.0;
+
+    /* =====================
+       TUNING OFFSETS
+       ===================== */
+
+    public double distanceOffsetInches = 0.0;
+    public double rpmOffset = 0.0;
+
+    private static final double GRAVITY = 386.09; // in/s^2
 
     public Limelight(HardwareMap hardwareMap) {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
@@ -40,46 +65,56 @@ public class Limelight {
         }
     }
 
+    public boolean hasTarget() { return hasTarget; }
     public double getTx() { return tx; }
     public double getTy() { return ty; }
     public double getTa() { return ta; }
-    public boolean hasTarget() { return hasTarget; }
 
-    // Estimate distance to target using Limelight vertical angle (ty)
+    /* =====================
+       DISTANCE ESTIMATION
+       ===================== */
+
     public double getDistanceInches() {
-        // convert total angle to radians
-        double totalAngle = Math.toRadians(ty + shooterAngleDegrees);
-        return ((targetHeightInches - shooterHeightInches) / Math.tan(totalAngle)) + distanceOffsetInches;
+        double angleRad = Math.toRadians(limelightPitchDegrees + ty);
+        if (Math.abs(Math.tan(angleRad)) < 0.01) return 0;
+
+        double distance = (targetHeightInches - limelightHeightInches)
+                / Math.tan(angleRad);
+
+        return distance + distanceOffsetInches;
     }
 
-    // Calculate required shooter velocity (in inches per second)
-    public double calculateRequiredVelocity() {
-        double distance = getDistanceInches();
-        double theta = Math.toRadians(shooterAngleDegrees);
+    /* =====================
+       BALLISTIC SOLVER
+       ===================== */
 
-        double deltaH = (targetHeightInches + aimOffsetInches) - shooterHeightInches;
+    private double calculateExitVelocityIPS() {
+        double d = getDistanceInches();
+        if (d <= 0) return 0;
 
-        // avoid divide-by-zero cases
-        if (distance <= 0 || Math.abs(theta) < 0.01) {
-            return 0;
-        }
+        double theta = Math.toRadians(hoodAngleDegrees);
+        double deltaH = targetHeightInches - shooterHeightInches;
 
-        double numerator = GRAVITY * Math.pow(distance, 2);
-        double denominator = 2 * Math.pow(Math.cos(theta), 2) * (distance * Math.tan(theta) - deltaH);
+        double cos = Math.cos(theta);
+        double tan = Math.tan(theta);
 
-        if (denominator <= 0) {
-            return 0;
-        }
+        double denominator = 2 * cos * cos * (d * tan - deltaH);
+        if (denominator <= 0) return 0;
 
-        double v = Math.sqrt(numerator / denominator);
-        return v; // inches per second
+        return Math.sqrt((GRAVITY * d * d) / denominator);
     }
 
-    // Convert linear velocity to shooter RPM
+    /* =====================
+       RPM CONVERSION
+       ===================== */
+
     public double getRequiredShooterRPM() {
-        double v = calculateRequiredVelocity();
+        double v = calculateExitVelocityIPS();
+        if (v <= 0) return 0;
+
         double wheelCircumference = Math.PI * flywheelDiameterInches;
-        double revsPerSecond = v / wheelCircumference;
-        return revsPerSecond * 60.0; // RPM
+        double baseRPM = (v / wheelCircumference) * 60.0;
+
+        return baseRPM + rpmOffset;
     }
 }

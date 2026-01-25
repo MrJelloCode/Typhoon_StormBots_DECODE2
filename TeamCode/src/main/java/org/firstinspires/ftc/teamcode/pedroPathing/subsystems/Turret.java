@@ -1,29 +1,31 @@
 package org.firstinspires.ftc.teamcode.pedroPathing.subsystems;
 
-import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.arcrobotics.ftclib.controller.PIDController;
-import org.firstinspires.ftc.robotcore.external.navigation.*;
+
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants.TeleConstants;
 
-
 public class Turret {
-    private DcMotorEx turretMotor;
-    private IMU imu;
-    private PIDController pid;
 
+    private final DcMotorEx turretMotor;
+    private final PIDController pid;
 
-    private static final double TICKS_PER_REV = 537.6; // goBILDA / REV planetary motor encoder
-    private static final double GEAR_RATIO = 16.0; // 16:1 planetary gearbox // CHANGE
+    // Encoder constants
+    private static final double TICKS_PER_REV = 28.0;   // motor encoder CPR
+    private static final double GEAR_RATIO = 32.0;      // planetary ratio
 
-
-    private double targetFieldAngleDeg = 0.0;
-    private double turretZeroOffsetDeg = 0.0;
-
+    // Safety
+    private static final double MAX_POWER = 0.75;
+    private static final double MIN_ANGLE = -180.0;
+    private static final double MAX_ANGLE = 180.0;
 
     public Turret(HardwareMap hw) {
         turretMotor = hw.get(DcMotorEx.class, "turret");
-        imu = hw.get(IMU.class, "imu");
-
+        turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         pid = new PIDController(
                 TeleConstants.TURRET_KP,
@@ -31,56 +33,59 @@ public class Turret {
                 TeleConstants.TURRET_KD
         );
 
-
         turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
+    /**
+     * Vision-based aiming.
+     * Call every loop when Limelight sees an AprilTag.
+     *
+     * @param tx Limelight horizontal offset (degrees)
+     */
+    public void aimWithLimelight(double tx) {
+        // Deadband to stop jitter
+        if (Math.abs(tx) < 0.5) {
+            turretMotor.setPower(0);
+            return;
+        }
 
-    public void zeroTurret() {
-        turretZeroOffsetDeg = getTurretAngleDeg();
-    }
+        double power = pid.calculate(tx, 0);
 
+        // Clamp power
+        power = clamp(power, -MAX_POWER, MAX_POWER);
 
-    public void setTargetFieldAngle(double angleDeg) {
-        targetFieldAngleDeg = normalize(angleDeg);
-    }
+        // Wire-wrap protection
+        double angle = getTurretAngleDeg();
+        if ((angle <= MIN_ANGLE && power < 0) ||
+                (angle >= MAX_ANGLE && power > 0)) {
+            power = 0;
+        }
 
-
-    public void update() {
-        double robotYawDeg = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-        double desiredTurretAngleDeg = normalize(targetFieldAngleDeg - robotYawDeg);
-
-
-        desiredTurretAngleDeg = clamp(
-                desiredTurretAngleDeg,
-                TeleConstants.TURRET_MIN_ANGLE,
-                TeleConstants.TURRET_MAX_ANGLE
-        );
-
-
-        double currentTurretAngleDeg = getTurretAngleDeg();
-        double error = normalize(desiredTurretAngleDeg - currentTurretAngleDeg);
-
-
-        double power = pid.calculate(error, 0);
         turretMotor.setPower(power);
+
+
     }
 
+    /**
+     * Stop turret if no target
+     */
+    public void stop() {
+        turretMotor.setPower(0);
+    }
 
-    private double getTurretAngleDeg() {
+    public void power(double speed){
+        turretMotor.setPower(speed*0.35);
+    }
+
+    /**
+     * Returns turret angle relative to startup (degrees)
+     */
+    public double getTurretAngleDeg() {
         double ticks = turretMotor.getCurrentPosition();
-        double revs = ticks / (TICKS_PER_REV * GEAR_RATIO);
-        return normalize(revs * 360.0 - turretZeroOffsetDeg);
+        double revolutions = ticks / (TICKS_PER_REV * GEAR_RATIO);
+        return revolutions * 360.0;
     }
-
-
-    private double normalize(double angle) {
-        while (angle > 180) angle -= 360;
-        while (angle < -180) angle += 360;
-        return angle;
-    }
-
 
     private double clamp(double val, double min, double max) {
         return Math.max(min, Math.min(max, val));
