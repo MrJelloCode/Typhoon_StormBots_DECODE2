@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.pedroPathing.OpModes;
 
-import android.annotation.SuppressLint;
-
 import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
@@ -22,9 +20,10 @@ public class PurpleWinter extends OpMode {
 
     /* ================= SHOOTER CONFIG ================= */
 
-    private static final double DEFAULT_RPM = 1000;
+    private static final double SMART_IDLE_RPM = 800;
+    private static final double DEFAULT_RPM = 1500;
     private static final double RPM_TOLERANCE = 75;
-    private static final double TX_TOLERANCE = 1.5;
+    private static final double TX_TOLERANCE = 1.0;
     private static final double MANUAL_OVERRIDE_RPM = 1500;
     private static final double SPINUP_TIME_SEC = 0.35;
 
@@ -40,7 +39,7 @@ public class PurpleWinter extends OpMode {
 
     /* ================= STATE ================= */
 
-    private double targetRPM = 0;
+    private double targetRPM = SMART_IDLE_RPM;
     private double shooterEnableTime = 0;
     private boolean shooterSpunUp = false;
 
@@ -54,6 +53,14 @@ public class PurpleWinter extends OpMode {
 
     private double lastKnownLLRPM = DEFAULT_RPM;
 
+    /* ================= EMERGENCY STOP ================= */
+
+    private boolean shooterDisabled = false;
+    private boolean lastBState = false;
+
+    private double slowMode = 1.0;
+    private double slowTurn = 0.8;
+
     @Override
     public void init() {
         drivetrain = new Drivetrain(hardwareMap);
@@ -65,23 +72,48 @@ public class PurpleWinter extends OpMode {
         transferMotor = hardwareMap.get(DcMotorEx.class, "transfer");
     }
 
-    @SuppressLint("SuspiciousIndentation")
     @Override
     public void loop() {
 
-        drivetrain.robotCentricDrive(gamepad1, 1.0, 0.8);
+
+        if (gamepad1.right_trigger > 0.1){
+            slowMode = 0.5;
+            slowTurn = 0.3;
+        } else {
+            slowMode = 1.0;
+            slowTurn = 0.8;
+        };
+
+        drivetrain.fieldCentricDrive(gamepad1, slowMode, slowTurn);
         limelight.update();
 
         boolean shootHeld = gamepad2.left_trigger > 0.1;
         boolean manualOverride = gamepad2.y;
 
+        /* ================= EMERGENCY STOP TOGGLE ================= */
+
+        boolean bPressed = gamepad2.b;
+        if (bPressed && !lastBState) {
+            shooterDisabled = !shooterDisabled;
+        }
+        lastBState = bPressed;
+
         /* ================= TARGET RPM LOGIC ================= */
 
-        if (!shootHeld) {
-            shooterSpunUp = false;
-            shooterEnableTime = 0;
+        if (shooterDisabled) {
+
             targetRPM = 0;
             bursting = false;
+            shooterSpunUp = false;
+            shooterEnableTime = 0;
+
+        } else if (!shootHeld) {
+
+            bursting = false;
+            targetRPM = SMART_IDLE_RPM;
+            shooterSpunUp = false;
+            shooterEnableTime = 0;
+
         } else {
 
             if (manualOverride) {
@@ -92,13 +124,12 @@ public class PurpleWinter extends OpMode {
 
                 if (llRPM > 0) {
                     targetRPM = llRPM;
-                    lastKnownLLRPM = llRPM; // 🔒 store last valid solution
+                    lastKnownLLRPM = llRPM;
                 } else {
                     targetRPM = lastKnownLLRPM;
                 }
             }
             else {
-                // 🚨 Defense fallback
                 targetRPM = lastKnownLLRPM;
             }
 
@@ -110,19 +141,17 @@ public class PurpleWinter extends OpMode {
             }
         }
 
-        shooter.update(shootHeld, targetRPM);
+        /* ================= SHOOTER UPDATE ================= */
+
+        shooter.update(true, targetRPM);
 
         /* ================= READINESS CHECK ================= */
 
         boolean rpmReady =
                 Math.abs(shooter.getRPM() - targetRPM) <= RPM_TOLERANCE;
 
-        boolean txReady =
-                limelight.hasTarget() &&
-                        Math.abs(limelight.getTx()) <= TX_TOLERANCE;
-
         boolean readyToShoot =
-                shootHeld && shooterSpunUp && rpmReady;
+                shootHeld && shooterSpunUp && rpmReady && !shooterDisabled;
 
         /* ================= BURST FIRE ================= */
 
@@ -154,22 +183,12 @@ public class PurpleWinter extends OpMode {
 
         /* ================= MANUAL FEED ================= */
 
-        boolean manualFeedPressed = gamepad2.left_bumper;
 
-        if (manualFeedPressed && readyToShoot && !bursting && !manualFeeding) {
-            manualFeeding = true;
-            manualFeedStart = getRuntime();
+
+        if ((gamepad2.right_trigger > 0.1) && readyToShoot && !bursting ) {
+            transferMotor.setPower(-0.7);
         }
 
-        if (manualFeeding) {
-            if (getRuntime() - manualFeedStart >= MANUAL_FEED_TIME) {
-                manualFeeding = false;
-            }
-        }
-
-        transferMotor.setPower(
-                (feeding || manualFeeding) ? -0.7 : 0
-        );
 
         /* ================= INTAKE ================= */
 
@@ -185,12 +204,11 @@ public class PurpleWinter extends OpMode {
 
         /* ================= TELEMETRY ================= */
 
-        telemetry.addData("RPM", shooter.getRPM());
+        telemetry.addData("Shooter RPM", shooter.getRPM());
         telemetry.addData("Target RPM", targetRPM);
-        telemetry.addData("Last LL RPM", lastKnownLLRPM);
+        telemetry.addData("Shooter Disabled", shooterDisabled);
         telemetry.addData("Shooter Ready", readyToShoot);
         telemetry.addData("Bursting", bursting);
-        telemetry.addData("Manual Feed", manualFeeding);
         telemetry.update();
     }
 }
