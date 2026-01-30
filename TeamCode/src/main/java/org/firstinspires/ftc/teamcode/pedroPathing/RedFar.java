@@ -69,10 +69,10 @@ public class RedFar extends OpMode {
     /* ================= SHOOTER CONFIG ================= */
 
     // Fixed RPM target for this auto (tuned value)
-    private double target = 3000;
+    private double target = 3800;
 
     // Intake / transfer power (negative = pull balls inward)
-    private double power = -0.75;
+    private double power = -1;
 
     // Master enable for shooter PID loop
     // True  = shooter actively controls RPM
@@ -129,19 +129,23 @@ public class RedFar extends OpMode {
 
                 // Shoot 3 balls (feed only when path is done AND shooter is at speed)
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(250),
                 new InstantCommand(() -> transfer.setPower(0)),
 
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(250),
                 new InstantCommand(() -> transfer.setPower(0)),
 
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(750),
                 new InstantCommand(() -> transfer.setPower(0)),
+                new InstantCommand(() -> intake.setPower(0)),
 
                 /* ================= STEP 2: GRAB CLOSE BALLS ================= */
 
@@ -177,19 +181,23 @@ public class RedFar extends OpMode {
 
                 // Shoot 3 balls again
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(250),
                 new InstantCommand(() -> transfer.setPower(0)),
 
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(250),
                 new InstantCommand(() -> transfer.setPower(0)),
 
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(750),
                 new InstantCommand(() -> transfer.setPower(0)),
+                new InstantCommand(() -> intake.setPower(0)),
 
                 /* ================= STEP 4: PARK ================= */
 
