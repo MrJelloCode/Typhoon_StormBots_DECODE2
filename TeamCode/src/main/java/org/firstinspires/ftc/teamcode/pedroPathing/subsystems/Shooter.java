@@ -39,4 +39,8 @@ public class Shooter {
     public double getRPM() {
         return shooterMotor.getVelocity() * 60.0 / TICKS_PER_REV;
     }
+
+    public boolean atTargetVelocity(double current, double target){
+        return(Math.abs(current - target) < 20);
+    };
 }

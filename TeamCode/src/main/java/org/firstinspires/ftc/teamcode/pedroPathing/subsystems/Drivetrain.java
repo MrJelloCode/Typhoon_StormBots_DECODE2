@@ -11,10 +11,10 @@ public class Drivetrain {
 
 
     public Drivetrain(HardwareMap hw) {
-        frontLeft = hw.get(DcMotorEx.class, "FL");
+        frontLeft = hw.get(DcMotorEx.class, "BR");
         frontRight = hw.get(DcMotorEx.class, "FR");
         backLeft = hw.get(DcMotorEx.class, "BL");
-        backRight = hw.get(DcMotorEx.class, "BR");
+        backRight = hw.get(DcMotorEx.class, "FL");
 
 
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -45,6 +45,8 @@ public class Drivetrain {
 
 
         double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+
+        if(gamepad.start)imu.resetYaw();
 
 
         frontLeft.setPower((rotY + rotX + rx) / denominator * slowMode);

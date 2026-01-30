@@ -192,7 +192,7 @@ public class PurpleWinter extends OpMode {
 
         /* ================= INTAKE ================= */
 
-        intakeMotor.setPower(-gamepad2.left_stick_y * 0.6);
+        intakeMotor.setPower(-gamepad2.left_stick_y * 0.9);
 
         /* ================= TURRET ================= */
 
