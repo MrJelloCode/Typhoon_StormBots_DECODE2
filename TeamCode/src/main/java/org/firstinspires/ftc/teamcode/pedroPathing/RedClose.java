@@ -44,7 +44,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.subsystems.Turret;
  */
 @Autonomous(name = "Red Far Auto", group = "Autonomous")
 @Configurable
-public class RedFar extends OpMode {
+public class RedClose extends OpMode {
 
     /* ================= TELEMETRY ================= */
 
@@ -69,7 +69,7 @@ public class RedFar extends OpMode {
     /* ================= SHOOTER CONFIG ================= */
 
     // Fixed RPM target for this auto (tuned value)
-    private double target = 3900;
+    private double target = 3000;
 
     // Intake / transfer power (negative = pull balls inward)
     private double power = -1;
@@ -91,7 +91,7 @@ public class RedFar extends OpMode {
 
         /* -------- Path follower -------- */
         follower = AutoConstants.createFollower(hardwareMap);
-        follower.setStartingPose(new Pose(88, 8, Math.toRadians(0)));
+        follower.setStartingPose(new Pose(128, 112, Math.toRadians(0)));
         paths = new Paths(follower);
 
         /* -------- Subsystems -------- */
@@ -131,19 +131,19 @@ public class RedFar extends OpMode {
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(50),
-                new InstantCommand(() -> transfer.setPower(0)),
-
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
-                new InstantCommand(() -> intake.setPower(power)),
-                new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(150),
+                new WaitCommand(250),
                 new InstantCommand(() -> transfer.setPower(0)),
 
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(250),
+                new InstantCommand(() -> transfer.setPower(0)),
+
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new InstantCommand(() -> intake.setPower(power)),
+                new InstantCommand(() -> transfer.setPower(power)),
+                new WaitCommand(750),
                 new InstantCommand(() -> transfer.setPower(0)),
                 new InstantCommand(() -> intake.setPower(0)),
 
@@ -183,19 +183,19 @@ public class RedFar extends OpMode {
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(50),
+                new WaitCommand(250),
                 new InstantCommand(() -> transfer.setPower(0)),
 
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(150),
+                new WaitCommand(250),
                 new InstantCommand(() -> transfer.setPower(0)),
 
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(350),
+                new WaitCommand(750),
                 new InstantCommand(() -> transfer.setPower(0)),
                 new InstantCommand(() -> intake.setPower(0)),
 
@@ -260,27 +260,27 @@ public class RedFar extends OpMode {
         public Paths(Follower follower) {
 
             ToScoreInitial = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(88, 8), new Pose(88, 23)))
+                    .addPath(new BezierLine(new Pose(128, 112), new Pose(82, 81)))
                     .setLinearHeadingInterpolation(0, 0)
                     .build();
 
             toAlignClose = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(88, 23), new Pose(88, 35)))
+                    .addPath(new BezierLine(new Pose(82, 81), new Pose(82, 81)))
                     .setLinearHeadingInterpolation(0, 0)
                     .build();
 
             toGrabClose = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(88, 35), new Pose(135, 35)))
+                    .addPath(new BezierLine(new Pose(82, 81), new Pose(134, 81)))
                     .setLinearHeadingInterpolation(0, 0)
                     .setTangentHeadingInterpolation()
                     .build();
 
             toScoreClose = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(135, 35), new Pose(88, 24)))
+                    .addPath(new BezierLine(new Pose(134, 81), new Pose(82, 81)))
                     .setLinearHeadingInterpolation(0, 0)
                     .build();
             toAlignSecondary = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(88, 24), new Pose(88, 55)))
+                    .addPath(new BezierLine( new Pose(88, 21), new Pose(88, 55)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
 
@@ -295,7 +295,7 @@ public class RedFar extends OpMode {
                     .build();
 
             toPark = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(88, 21), new Pose(88, 45)))
+                    .addPath(new BezierLine(new Pose(82, 21), new Pose(88, 45)))
                     .setLinearHeadingInterpolation(0, 0)
                     .build();
         }
