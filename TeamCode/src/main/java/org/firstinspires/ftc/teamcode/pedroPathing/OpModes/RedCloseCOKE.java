@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pedroPathing;
+package org.firstinspires.ftc.teamcode.pedroPathing.OpModes;
 
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
@@ -42,9 +42,9 @@ import org.firstinspires.ftc.teamcode.pedroPathing.subsystems.Turret;
  * - All timing is gated on path completion + shooter velocity readiness
  * - Turret tracks vision target when available, otherwise stays idle
  */
-@Autonomous(name = "Red Close Auto", group = "Autonomous")
+@Autonomous(name = "COKE AUTO", group = "Autonomous")
 @Configurable
-public class RedClose extends OpMode {
+public class RedCloseCOKE extends OpMode {
 
     /* ================= TELEMETRY ================= */
 
@@ -69,7 +69,7 @@ public class RedClose extends OpMode {
     /* ================= SHOOTER CONFIG ================= */
 
     // Fixed RPM target for this auto (tuned value)
-    private double target = 3000;
+    private double target = 3100;
 
     // Intake / transfer power (negative = pull balls inward)
     private double power = -1;
@@ -131,19 +131,7 @@ public class RedClose extends OpMode {
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(50),
-                new InstantCommand(() -> transfer.setPower(0)),
-
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
-                new InstantCommand(() -> intake.setPower(power)),
-                new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(150),
-                new InstantCommand(() -> transfer.setPower(0)),
-
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
-                new InstantCommand(() -> intake.setPower(power)),
-                new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(250),
+                new WaitCommand(500),
                 new InstantCommand(() -> transfer.setPower(0)),
 //                new InstantCommand(() -> intake.setPower(0)),
 
@@ -183,19 +171,7 @@ public class RedClose extends OpMode {
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(75),
-                new InstantCommand(() -> transfer.setPower(0)),
-
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
-                new InstantCommand(() -> intake.setPower(power)),
-                new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(100),
-                new InstantCommand(() -> transfer.setPower(0)),
-
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
-                new InstantCommand(() -> intake.setPower(power)),
-                new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(250),
+                new WaitCommand(300),
                 new InstantCommand(() -> transfer.setPower(0)),
                 new InstantCommand(() -> intake.setPower(0)),
 
