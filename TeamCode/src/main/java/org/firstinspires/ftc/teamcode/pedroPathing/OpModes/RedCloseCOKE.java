@@ -69,7 +69,7 @@ public class RedCloseCOKE extends OpMode {
     /* ================= SHOOTER CONFIG ================= */
 
     // Fixed RPM target for this auto (tuned value)
-    private double target = 3100;
+    private double target = 3400;
 
     // Intake / transfer power (negative = pull balls inward)
     private double power = -1;
@@ -131,7 +131,19 @@ public class RedCloseCOKE extends OpMode {
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(500),
+                new WaitCommand(30),
+                new InstantCommand(() -> transfer.setPower(0)),
+
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new InstantCommand(() -> intake.setPower(power)),
+                new InstantCommand(() -> transfer.setPower(power)),
+                new WaitCommand(150),
+                new InstantCommand(() -> transfer.setPower(0)),
+
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new InstantCommand(() -> intake.setPower(power)),
+                new InstantCommand(() -> transfer.setPower(power)),
+                new WaitCommand(550),
                 new InstantCommand(() -> transfer.setPower(0)),
 //                new InstantCommand(() -> intake.setPower(0)),
 
@@ -140,14 +152,16 @@ public class RedCloseCOKE extends OpMode {
                 new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Grabbing close balls")),
 
                 // Disable shooter to save power while intaking
-//                new ParallelCommandGroup(
-//                        new InstantCommand(() -> follower.followPath(paths.toAlignClose, true))
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> follower.followPath(paths.toAlignClose, true))
 //                        new InstantCommand(() -> intake.setPower(0)),
 //                        new InstantCommand(() -> shooterActive = false)
-//                ),
+                ),
 //
 //                new WaitUntilCommand(() -> !follower.isBusy()),
 //                new WaitCommand(1000),
+
+
 
                 new ParallelCommandGroup(
                         new InstantCommand(() -> intake.setPower(power)),
@@ -171,11 +185,74 @@ public class RedCloseCOKE extends OpMode {
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(300),
+                new WaitCommand(50),
                 new InstantCommand(() -> transfer.setPower(0)),
-                new InstantCommand(() -> intake.setPower(0)),
+
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new InstantCommand(() -> intake.setPower(power)),
+                new InstantCommand(() -> transfer.setPower(power)),
+                new WaitCommand(150),
+                new InstantCommand(() -> transfer.setPower(0)),
+
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new InstantCommand(() -> intake.setPower(power)),
+                new InstantCommand(() -> transfer.setPower(power)),
+                new WaitCommand(550),
+                new InstantCommand(() -> transfer.setPower(0)),
+
+                /*======== STEP 3.5 : GRAB SECOND SET==============*/
+
+                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Grabbing close balls")),
+
+                // Disable shooter to save power while intaking
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> follower.followPath(paths.toAlignSecondary, true))
+//                        new InstantCommand(() -> intake.setPower(0)),
+//                        new InstantCommand(() -> shooterActive = false)
+                ),
+
+                new WaitUntilCommand(() -> !follower.isBusy()),
+//                new WaitCommand(1000),
+
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> intake.setPower(power)),
+                        new InstantCommand(() -> follower.followPath(paths.toGrabSecondary, true))
+                ),
+
+                new WaitUntilCommand(() -> !follower.isBusy()),
+//                new WaitCommand(250),
+//                new InstantCommand(() -> intake.setPower(0)),
+
+                /* ================= STEP 3.75: SCORE CLOSE BALLS ================= */
+
+                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Scoring close balls")),
+
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> follower.followPath(paths.toScoreSecondary, true))
+//                        new InstantCommand(() -> shooterActive = true)
+                ),
+
+                // Shoot 3 balls again
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new InstantCommand(() -> intake.setPower(power)),
+                new InstantCommand(() -> transfer.setPower(power)),
+                new WaitCommand(50),
+                new InstantCommand(() -> transfer.setPower(0)),
+
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new InstantCommand(() -> intake.setPower(power)),
+                new InstantCommand(() -> transfer.setPower(power)),
+                new WaitCommand(150),
+                new InstantCommand(() -> transfer.setPower(0)),
+
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new InstantCommand(() -> intake.setPower(power)),
+                new InstantCommand(() -> transfer.setPower(power)),
+                new WaitCommand(550),
+                new InstantCommand(() -> transfer.setPower(0)),
 
                 /* ================= STEP 4: PARK ================= */
+
 
                 new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Parking")),
                 new InstantCommand(() -> follower.followPath(paths.toPark, true)),
@@ -236,42 +313,44 @@ public class RedCloseCOKE extends OpMode {
         public Paths(Follower follower) {
 
             ToScoreInitial = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(128, 112), new Pose(82, 81)))
+                    .addPath(new BezierLine(new Pose(128, 112), new Pose(93, 94)))
                     .setLinearHeadingInterpolation(0, 0)
                     .build();
 
-            toAlignClose = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(82, 81), new Pose(82, 81)))
-                    .setLinearHeadingInterpolation(0, 0)
+            toAlignClose = follower .pathBuilder()
+                    .addPath(new BezierLine( new Pose(93, 94), new Pose(93, 81)))
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
+
 
             toGrabClose = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(82, 81), new Pose(134, 81)))
+                    .addPath(new BezierLine(new Pose(93, 81), new Pose(134, 81)))
                     .setLinearHeadingInterpolation(0, 0)
                     .setTangentHeadingInterpolation()
                     .build();
 
             toScoreClose = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(134, 81), new Pose(82, 81)))
+                    .addPath(new BezierLine(new Pose(134, 81), new Pose(93, 94)))
                     .setLinearHeadingInterpolation(0, 0)
                     .build();
+
             toAlignSecondary = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(88, 21), new Pose(88, 55)))
+                    .addPath(new BezierLine( new Pose(93, 94), new Pose(93, 55)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
 
             toGrabSecondary = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(88, 55), new Pose(130, 55)))
+                    .addPath(new BezierLine( new Pose(93, 60), new Pose(138, 60)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
 
             toScoreSecondary = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(130, 55), new Pose(88, 21)))
+                    .addPath(new BezierLine( new Pose(138, 60), new Pose(93, 94)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
 
             toPark = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(82, 21), new Pose(88, 45)))
+                    .addPath(new BezierLine(new Pose(93, 94), new Pose(100, 70)))
                     .setLinearHeadingInterpolation(0, 0)
                     .build();
         }
