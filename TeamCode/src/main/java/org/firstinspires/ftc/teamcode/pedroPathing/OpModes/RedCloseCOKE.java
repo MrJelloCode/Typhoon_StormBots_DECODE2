@@ -69,7 +69,7 @@ public class RedCloseCOKE extends OpMode {
     /* ================= SHOOTER CONFIG ================= */
 
     // Fixed RPM target for this auto (tuned value)
-    private double target = 3400;
+    private double target = 3200;
 
     // Intake / transfer power (negative = pull balls inward)
     private double power = -1;
@@ -248,7 +248,7 @@ public class RedCloseCOKE extends OpMode {
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(550),
+                new WaitCommand(750),
                 new InstantCommand(() -> transfer.setPower(0)),
 
                 /* ================= STEP 4: PARK ================= */
@@ -256,7 +256,7 @@ public class RedCloseCOKE extends OpMode {
 
                 new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Parking")),
                 new InstantCommand(() -> follower.followPath(paths.toPark, true)),
-                new WaitCommand(1000),
+//                new WaitCommand(1000),
 
                 /* ================= FINISH ================= */
 
@@ -281,13 +281,15 @@ public class RedCloseCOKE extends OpMode {
         shooter.update(shooterActive, target);
 
         /* -------- Turret control -------- */
-        if (limelight.hasTarget()) {
+
+        if(limelight.hasTarget() && gamepad2.right_stick_x == 0){
             turret.aimWithLimelight(limelight.getTx());
         } else {
-            turret.stop();
+            turret.power(gamepad2.right_stick_x*0);
         }
 
         /* -------- Telemetry -------- */
+        panelsTelemetry.debug("Limelight has Target", limelight.hasTarget());
         panelsTelemetry.debug("Shooter Active", shooterActive);
         panelsTelemetry.debug("Shooter RPM", shooter.getRPM());
         panelsTelemetry.debug("Target RPM", target);
@@ -295,6 +297,7 @@ public class RedCloseCOKE extends OpMode {
         panelsTelemetry.debug("Robot X", follower.getPose().getX());
         panelsTelemetry.debug("Robot Y", follower.getPose().getY());
         panelsTelemetry.debug("Heading", follower.getPose().getHeading());
+
         panelsTelemetry.update(telemetry);
     }
 

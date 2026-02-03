@@ -58,7 +58,6 @@ public class Basic extends OpMode {
 
         if(limelight.hasTarget() && gamepad2.right_stick_x == 0){
             turret.aimWithLimelight(limelight.getTx());
-
         } else {
             turret.power(gamepad2.right_stick_x*0.5);
         }
