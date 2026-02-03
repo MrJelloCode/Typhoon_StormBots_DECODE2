@@ -63,7 +63,7 @@ public class Basic extends OpMode {
         }
 
         if(gamepad2.a) {target = 3000; shooterEnable = true;}
-        if(gamepad2.b) {target = 4000;shooterEnable = true;}
+        if(gamepad2.b) {target = 4200;shooterEnable = true;}
         if(gamepad2.y) {target = 0;shooterEnable = false;}
 
        shooter.update(shooterEnable, target);

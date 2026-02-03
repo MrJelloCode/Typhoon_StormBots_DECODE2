@@ -27,22 +27,9 @@ import org.firstinspires.ftc.teamcode.pedroPathing.subsystems.Turret;
  * ===============================
  * Red Far Autonomous
  * ===============================
- *
- * High-level goals of this auto:
- * 1. Drive to initial scoring position and shoot preload
- * 2. Intake close field balls
- * 3. Return and score them
- * 4. Intake secondary balls
- * 5. Return and score again
- * 6. Park
- *
- * Design philosophy:
- * - Shooter PID is ENABLED only when we intend to shoot
- * - Shooter PID is DISABLED while intaking to reduce battery draw
- * - All timing is gated on path completion + shooter velocity readiness
- * - Turret tracks vision target when available, otherwise stays idle
- */
-@Autonomous(name = "COKE AUTO", group = "Autonomous")
+ **/
+
+@Autonomous(name = "The semi working unhinged auto that like half works", group = "Autonomous")
 @Configurable
 public class RedCloseCOKE extends OpMode {
 
@@ -69,14 +56,11 @@ public class RedCloseCOKE extends OpMode {
     /* ================= SHOOTER CONFIG ================= */
 
     // Fixed RPM target for this auto (tuned value)
-    private double target = 3200;
+    private double target = 3280;
 
     // Intake / transfer power (negative = pull balls inward)
     private double power = -1;
 
-    // Master enable for shooter PID loop
-    // True  = shooter actively controls RPM
-    // False = shooter coasts to reduce power draw
     private boolean shooterActive = true;
 
     /* ================= COMMAND SYSTEM ================= */
@@ -128,21 +112,9 @@ public class RedCloseCOKE extends OpMode {
                 ),
 
                 // Shoot 3 balls (feed only when path is done AND shooter is at speed)
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)).withTimeout(5),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-//                new WaitCommand(30),
-//                new InstantCommand(() -> transfer.setPower(0)),
-//
-//                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
-//                new InstantCommand(() -> intake.setPower(power)),
-//                new InstantCommand(() -> transfer.setPower(power)),
-//                new WaitCommand(150),
-//                new InstantCommand(() -> transfer.setPower(0)),
-//
-//                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
-//                new InstantCommand(() -> intake.setPower(power)),
-//                new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(750),
                 new InstantCommand(() -> transfer.setPower(0)),
 //                new InstantCommand(() -> intake.setPower(0)),
@@ -154,12 +126,10 @@ public class RedCloseCOKE extends OpMode {
                 // Disable shooter to save power while intaking
                 new ParallelCommandGroup(
                         new InstantCommand(() -> follower.followPath(paths.toAlignClose, true))
-//                        new InstantCommand(() -> intake.setPower(0)),
-//                        new InstantCommand(() -> shooterActive = false)
                 ),
 //
-//                new WaitUntilCommand(() -> !follower.isBusy()),
-//                new WaitCommand(1000),
+                new WaitUntilCommand(() -> !follower.isBusy()),
+                new WaitCommand(1000),
 
 
 
@@ -178,27 +148,16 @@ public class RedCloseCOKE extends OpMode {
 
                 new ParallelCommandGroup(
                         new InstantCommand(() -> follower.followPath(paths.toScoreClose, true))
-//                        new InstantCommand(() -> shooterActive = true)
+
                 ),
 
                 // Shoot 3 balls again
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-//                new WaitCommand(50),
-//                new InstantCommand(() -> transfer.setPower(0)),
-//
-//                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
-//                new InstantCommand(() -> intake.setPower(power)),
-//                new InstantCommand(() -> transfer.setPower(power)),
-//                new WaitCommand(150),
-//                new InstantCommand(() -> transfer.setPower(0)),
-//
-//                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
-//                new InstantCommand(() -> intake.setPower(power)),
-//                new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(750),
                 new InstantCommand(() -> transfer.setPower(0)),
+
 
                 /*======== STEP 3.5 : GRAB SECOND SET==============*/
 
@@ -207,8 +166,7 @@ public class RedCloseCOKE extends OpMode {
                 // Disable shooter to save power while intaking
                 new ParallelCommandGroup(
                         new InstantCommand(() -> follower.followPath(paths.toAlignSecondary, true))
-//                        new InstantCommand(() -> intake.setPower(0)),
-//                        new InstantCommand(() -> shooterActive = false)
+
                 ),
 
                 new WaitUntilCommand(() -> !follower.isBusy()),
@@ -333,12 +291,12 @@ public class RedCloseCOKE extends OpMode {
                     .build();
 
             toScoreClose = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(134, 81), new Pose(93, 94)))
+                    .addPath(new BezierLine(new Pose(134, 81), new Pose(93, 81)))
                     .setLinearHeadingInterpolation(0, 0)
                     .build();
 
             toAlignSecondary = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(93, 94), new Pose(93, 55)))
+                    .addPath(new BezierLine( new Pose(93, 81), new Pose(93, 55)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
 
