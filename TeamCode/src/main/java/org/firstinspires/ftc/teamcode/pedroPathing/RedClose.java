@@ -128,19 +128,19 @@ public class RedClose extends OpMode {
                 ),
 
                 // Shoot 3 balls (feed only when path is done AND shooter is at speed)
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity( target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(50),
                 new InstantCommand(() -> transfer.setPower(0)),
 
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity( target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(150),
                 new InstantCommand(() -> transfer.setPower(0)),
 
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(250),
@@ -152,11 +152,11 @@ public class RedClose extends OpMode {
                 new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Grabbing close balls")),
 
                 // Disable shooter to save power while intaking
-//                new ParallelCommandGroup(
-//                        new InstantCommand(() -> follower.followPath(paths.toAlignClose, true))
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> follower.followPath(paths.toAlignClose, true))
 //                        new InstantCommand(() -> intake.setPower(0)),
 //                        new InstantCommand(() -> shooterActive = false)
-//                ),
+                ),
 //
 //                new WaitUntilCommand(() -> !follower.isBusy()),
 //                new WaitCommand(1000),
@@ -180,19 +180,19 @@ public class RedClose extends OpMode {
                 ),
 
                 // Shoot 3 balls again
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity( target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(75),
                 new InstantCommand(() -> transfer.setPower(0)),
 
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(100),
                 new InstantCommand(() -> transfer.setPower(0)),
 
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(250),
@@ -259,43 +259,46 @@ public class RedClose extends OpMode {
 
         public Paths(Follower follower) {
 
+
             ToScoreInitial = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(128, 112), new Pose(82, 81)))
+                    .addPath(new BezierLine(new Pose(128, 112), new Pose(93, 94)))
                     .setLinearHeadingInterpolation(0, 0)
                     .build();
 
-            toAlignClose = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(82, 81), new Pose(82, 81)))
-                    .setLinearHeadingInterpolation(0, 0)
+            toAlignClose = follower .pathBuilder()
+                    .addPath(new BezierLine( new Pose(93, 94), new Pose(93, 81)))
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
+
 
             toGrabClose = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(82, 81), new Pose(134, 81)))
+                    .addPath(new BezierLine(new Pose(93, 81), new Pose(134, 81)))
                     .setLinearHeadingInterpolation(0, 0)
                     .setTangentHeadingInterpolation()
                     .build();
 
             toScoreClose = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(134, 81), new Pose(82, 81)))
+                    .addPath(new BezierLine(new Pose(134, 81), new Pose(93, 94)))
                     .setLinearHeadingInterpolation(0, 0)
                     .build();
+
             toAlignSecondary = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(88, 21), new Pose(88, 55)))
+                    .addPath(new BezierLine( new Pose(93, 94), new Pose(93, 55)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
 
             toGrabSecondary = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(88, 55), new Pose(130, 55)))
+                    .addPath(new BezierLine( new Pose(93, 60), new Pose(138, 60)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
 
             toScoreSecondary = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(130, 55), new Pose(88, 21)))
+                    .addPath(new BezierLine( new Pose(138, 60), new Pose(93, 94)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
 
             toPark = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(82, 21), new Pose(88, 45)))
+                    .addPath(new BezierLine(new Pose(93, 94), new Pose(100, 70)))
                     .setLinearHeadingInterpolation(0, 0)
                     .build();
         }

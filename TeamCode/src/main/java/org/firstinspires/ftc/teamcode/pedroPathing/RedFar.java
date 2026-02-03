@@ -128,19 +128,19 @@ public class RedFar extends OpMode {
                 ),
 
                 // Shoot 3 balls (feed only when path is done AND shooter is at speed)
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(50),
                 new InstantCommand(() -> transfer.setPower(0)),
 
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(150),
                 new InstantCommand(() -> transfer.setPower(0)),
 
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity( target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(250),
@@ -180,19 +180,19 @@ public class RedFar extends OpMode {
                 ),
 
                 // Shoot 3 balls again
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(50),
                 new InstantCommand(() -> transfer.setPower(0)),
 
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity( target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(150),
                 new InstantCommand(() -> transfer.setPower(0)),
 
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(350),

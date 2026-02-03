@@ -128,22 +128,22 @@ public class RedCloseCOKE extends OpMode {
                 ),
 
                 // Shoot 3 balls (feed only when path is done AND shooter is at speed)
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(30),
-                new InstantCommand(() -> transfer.setPower(0)),
-
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
-                new InstantCommand(() -> intake.setPower(power)),
-                new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(150),
-                new InstantCommand(() -> transfer.setPower(0)),
-
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
-                new InstantCommand(() -> intake.setPower(power)),
-                new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(550),
+//                new WaitCommand(30),
+//                new InstantCommand(() -> transfer.setPower(0)),
+//
+//                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+//                new InstantCommand(() -> intake.setPower(power)),
+//                new InstantCommand(() -> transfer.setPower(power)),
+//                new WaitCommand(150),
+//                new InstantCommand(() -> transfer.setPower(0)),
+//
+//                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+//                new InstantCommand(() -> intake.setPower(power)),
+//                new InstantCommand(() -> transfer.setPower(power)),
+                new WaitCommand(750),
                 new InstantCommand(() -> transfer.setPower(0)),
 //                new InstantCommand(() -> intake.setPower(0)),
 
@@ -182,22 +182,22 @@ public class RedCloseCOKE extends OpMode {
                 ),
 
                 // Shoot 3 balls again
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(50),
-                new InstantCommand(() -> transfer.setPower(0)),
-
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
-                new InstantCommand(() -> intake.setPower(power)),
-                new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(150),
-                new InstantCommand(() -> transfer.setPower(0)),
-
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
-                new InstantCommand(() -> intake.setPower(power)),
-                new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(550),
+//                new WaitCommand(50),
+//                new InstantCommand(() -> transfer.setPower(0)),
+//
+//                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+//                new InstantCommand(() -> intake.setPower(power)),
+//                new InstantCommand(() -> transfer.setPower(power)),
+//                new WaitCommand(150),
+//                new InstantCommand(() -> transfer.setPower(0)),
+//
+//                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+//                new InstantCommand(() -> intake.setPower(power)),
+//                new InstantCommand(() -> transfer.setPower(power)),
+                new WaitCommand(750),
                 new InstantCommand(() -> transfer.setPower(0)),
 
                 /*======== STEP 3.5 : GRAB SECOND SET==============*/
@@ -233,21 +233,21 @@ public class RedCloseCOKE extends OpMode {
                 ),
 
                 // Shoot 3 balls again
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(50),
-                new InstantCommand(() -> transfer.setPower(0)),
-
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
-                new InstantCommand(() -> intake.setPower(power)),
-                new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(150),
-                new InstantCommand(() -> transfer.setPower(0)),
-
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
-                new InstantCommand(() -> intake.setPower(power)),
-                new InstantCommand(() -> transfer.setPower(power)),
+//                new WaitCommand(50),
+//                new InstantCommand(() -> transfer.setPower(0)),
+//
+//                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+//                new InstantCommand(() -> intake.setPower(power)),
+//                new InstantCommand(() -> transfer.setPower(power)),
+//                new WaitCommand(150),
+//                new InstantCommand(() -> transfer.setPower(0)),
+//
+//                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+//                new InstantCommand(() -> intake.setPower(power)),
+//                new InstantCommand(() -> transfer.setPower(power)),
                 new WaitCommand(750),
                 new InstantCommand(() -> transfer.setPower(0)),
 
