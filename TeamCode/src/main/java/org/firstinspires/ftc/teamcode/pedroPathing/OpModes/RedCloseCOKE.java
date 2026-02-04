@@ -112,10 +112,10 @@ public class RedCloseCOKE extends OpMode {
                 ),
 
                 // Shoot 3 balls (feed only when path is done AND shooter is at speed)
-                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)).withTimeout(5),
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(750),
+                new WaitCommand(1000),
                 new InstantCommand(() -> transfer.setPower(0)),
 //                new InstantCommand(() -> intake.setPower(0)),
 
@@ -155,7 +155,7 @@ public class RedCloseCOKE extends OpMode {
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(750),
+                new WaitCommand(1000),
                 new InstantCommand(() -> transfer.setPower(0)),
 
 
@@ -206,7 +206,7 @@ public class RedCloseCOKE extends OpMode {
 //                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
 //                new InstantCommand(() -> intake.setPower(power)),
 //                new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(750),
+                new WaitCommand(1000),
                 new InstantCommand(() -> transfer.setPower(0)),
 
                 /* ================= STEP 4: PARK ================= */
@@ -250,6 +250,7 @@ public class RedCloseCOKE extends OpMode {
         panelsTelemetry.debug("Limelight has Target", limelight.hasTarget());
         panelsTelemetry.debug("Shooter Active", shooterActive);
         panelsTelemetry.debug("Shooter RPM", shooter.getRPM());
+        panelsTelemetry.debug("Shooter At target?", shooter.atTargetVelocity(target));
         panelsTelemetry.debug("Target RPM", target);
         panelsTelemetry.debug("Path Busy", follower.isBusy());
         panelsTelemetry.debug("Robot X", follower.getPose().getX());
@@ -309,6 +310,8 @@ public class RedCloseCOKE extends OpMode {
                     .addPath(new BezierLine( new Pose(138, 60), new Pose(93, 94)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
+
+
 
             toPark = follower.pathBuilder()
                     .addPath(new BezierLine(new Pose(93, 94), new Pose(100, 70)))
