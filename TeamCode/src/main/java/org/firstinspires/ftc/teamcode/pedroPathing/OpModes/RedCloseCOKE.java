@@ -56,7 +56,8 @@ public class RedCloseCOKE extends OpMode {
     /* ================= SHOOTER CONFIG ================= */
 
     // Fixed RPM target for this auto (tuned value)
-    private double target = 3280;
+    private double target = 3150;
+    private boolean turretActive = true;
 
     // Intake / transfer power (negative = pull balls inward)
     private double power = -1;
@@ -107,15 +108,16 @@ public class RedCloseCOKE extends OpMode {
                 // Drive to scoring position while spinning shooter and intake
                 new ParallelCommandGroup(
                         new InstantCommand(() -> follower.followPath(paths.ToScoreInitial, true)),
+                        new InstantCommand(() -> turretActive = true),
                         new InstantCommand(() -> shooterActive = true),
                         new InstantCommand(() -> intake.setPower(power))
                 ),
 
                 // Shoot 3 balls (feed only when path is done AND shooter is at speed)
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
-                new InstantCommand(() -> intake.setPower(power)),
+                new InstantCommand(() -> intake.setPower(power * 0.75)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(1000),
+                new WaitCommand(1200),
                 new InstantCommand(() -> transfer.setPower(0)),
 //                new InstantCommand(() -> intake.setPower(0)),
 
@@ -125,7 +127,8 @@ public class RedCloseCOKE extends OpMode {
 
                 // Disable shooter to save power while intaking
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> follower.followPath(paths.toAlignClose, true))
+                        new InstantCommand(() -> follower.followPath(paths.toAlignClose, true)),
+                        new InstantCommand(() -> turretActive = false)
                 ),
 //
                 new WaitUntilCommand(() -> !follower.isBusy()),
@@ -147,7 +150,8 @@ public class RedCloseCOKE extends OpMode {
                 new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Scoring close balls")),
 
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> follower.followPath(paths.toScoreClose, true))
+                        new InstantCommand(() -> follower.followPath(paths.toScoreClose, true)),
+                        new InstantCommand(() -> turretActive = true)
 
                 ),
 
@@ -165,7 +169,8 @@ public class RedCloseCOKE extends OpMode {
 
                 // Disable shooter to save power while intaking
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> follower.followPath(paths.toAlignSecondary, true))
+                        new InstantCommand(() -> follower.followPath(paths.toAlignSecondary, true)),
+                        new InstantCommand(() -> turretActive = false)
 
                 ),
 
@@ -186,7 +191,8 @@ public class RedCloseCOKE extends OpMode {
                 new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Scoring close balls")),
 
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> follower.followPath(paths.toScoreSecondary, true))
+                        new InstantCommand(() -> follower.followPath(paths.toScoreSecondary, true)),
+                        new InstantCommand(() -> turretActive = true)
 //                        new InstantCommand(() -> shooterActive = true)
                 ),
 
@@ -206,7 +212,59 @@ public class RedCloseCOKE extends OpMode {
 //                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
 //                new InstantCommand(() -> intake.setPower(power)),
 //                new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(1000),
+                new WaitCommand(1200),
+                new InstantCommand(() -> transfer.setPower(0)),
+
+                /*======== STEP 3.5 : GRAB SECOND SET==============*/
+
+                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Grabbing close balls")),
+
+                // Disable shooter to save power while intaking
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> follower.followPath(paths.toAlignFinal, true)),
+                        new InstantCommand(() -> turretActive = false)
+
+                ),
+
+                new WaitUntilCommand(() -> !follower.isBusy()),
+//                new WaitCommand(1000),
+
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> intake.setPower(power)),
+                        new InstantCommand(() -> follower.followPath(paths.toGrabFinal, true))
+                ),
+
+                new WaitUntilCommand(() -> !follower.isBusy()),
+//                new WaitCommand(250),
+//                new InstantCommand(() -> intake.setPower(0)),
+
+                /* ================= STEP 3.75: SCORE CLOSE BALLS ================= */
+
+                new InstantCommand(() -> panelsTelemetry.debug("Auto Step", "Scoring close balls")),
+
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> follower.followPath(paths.toScoreFinal, true)),
+                        new InstantCommand(() -> turretActive = true)
+//                        new InstantCommand(() -> shooterActive = true)
+                ),
+
+                // Shoot 3 balls again
+                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
+                new InstantCommand(() -> intake.setPower(power)),
+                new InstantCommand(() -> transfer.setPower(power)),
+//                new WaitCommand(50),
+//                new InstantCommand(() -> transfer.setPower(0)),
+//
+//                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+//                new InstantCommand(() -> intake.setPower(power)),
+//                new InstantCommand(() -> transfer.setPower(power)),
+//                new WaitCommand(150),
+//                new InstantCommand(() -> transfer.setPower(0)),
+//
+//                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
+//                new InstantCommand(() -> intake.setPower(power)),
+//                new InstantCommand(() -> transfer.setPower(power)),
+                new WaitCommand(1200),
                 new InstantCommand(() -> transfer.setPower(0)),
 
                 /* ================= STEP 4: PARK ================= */
@@ -234,13 +292,14 @@ public class RedCloseCOKE extends OpMode {
         follower.update();
         scheduler.run();
 
+
         /* -------- Shooter control -------- */
         // Shooter PID only runs when shooterActive == true
         shooter.update(shooterActive, target);
 
         /* -------- Turret control -------- */
 
-        if(limelight.hasTarget() && gamepad2.right_stick_x == 0){
+        if(limelight.hasTarget() && gamepad2.right_stick_x == 0 && turretActive){
             turret.aimWithLimelight(limelight.getTx());
         } else {
             turret.power(gamepad2.right_stick_x*0);
@@ -270,6 +329,9 @@ public class RedCloseCOKE extends OpMode {
         public PathChain toAlignSecondary;
         public PathChain toGrabSecondary;
         public PathChain toScoreSecondary;
+        public PathChain toAlignFinal;
+        public PathChain toGrabFinal;
+        public PathChain toScoreFinal;
         public PathChain toPark;
 
         public Paths(Follower follower) {
@@ -311,6 +373,20 @@ public class RedCloseCOKE extends OpMode {
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
 
+            toAlignFinal = follower .pathBuilder()
+                    .addPath(new BezierLine( new Pose(93, 81), new Pose(93, 45)))
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                    .build();
+
+            toGrabFinal = follower .pathBuilder()
+                    .addPath(new BezierLine( new Pose(93, 45), new Pose(138, 45)))
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                    .build();
+
+            toScoreFinal = follower .pathBuilder()
+                    .addPath(new BezierLine( new Pose(138, 45), new Pose(93, 94)))
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                    .build();
 
 
             toPark = follower.pathBuilder()
