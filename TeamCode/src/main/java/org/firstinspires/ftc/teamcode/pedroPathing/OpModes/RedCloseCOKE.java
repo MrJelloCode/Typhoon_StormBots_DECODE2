@@ -299,7 +299,7 @@ public class RedCloseCOKE extends OpMode {
 
         /* -------- Turret control -------- */
 
-        if(limelight.hasTarget() && gamepad2.right_stick_x == 0 && turretActive){
+        if(limelight.hasTarget() && gamepad2.right_stick_x == 0){
             turret.aimWithLimelight(limelight.getTx());
         } else {
             turret.power(gamepad2.right_stick_x*0);
