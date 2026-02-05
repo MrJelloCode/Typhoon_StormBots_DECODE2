@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.subsystems.Turret;
  * ===============================
  **/
 
-@Autonomous(name = "The semi working unhinged auto that like half works", group = "Autonomous")
+@Autonomous(name = "The 3/4 working auto that was built on no sleep and in a stinky room", group = "Autonomous")
 @Configurable
 public class RedCloseCOKE extends OpMode {
 
@@ -115,9 +115,9 @@ public class RedCloseCOKE extends OpMode {
 
                 // Shoot 3 balls (feed only when path is done AND shooter is at speed)
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
-                new InstantCommand(() -> intake.setPower(power * 0.75)),
+                new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(1200),
+                new WaitCommand(1250),
                 new InstantCommand(() -> transfer.setPower(0)),
 //                new InstantCommand(() -> intake.setPower(0)),
 
@@ -159,7 +159,7 @@ public class RedCloseCOKE extends OpMode {
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(1000),
+                new WaitCommand(1250),
                 new InstantCommand(() -> transfer.setPower(0)),
 
 
@@ -212,7 +212,7 @@ public class RedCloseCOKE extends OpMode {
 //                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
 //                new InstantCommand(() -> intake.setPower(power)),
 //                new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(1200),
+                new WaitCommand(1250),
                 new InstantCommand(() -> transfer.setPower(0)),
 
                 /*======== STEP 3.5 : GRAB SECOND SET==============*/
@@ -264,7 +264,7 @@ public class RedCloseCOKE extends OpMode {
 //                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
 //                new InstantCommand(() -> intake.setPower(power)),
 //                new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(1200),
+                new WaitCommand(1250),
                 new InstantCommand(() -> transfer.setPower(0)),
 
                 /* ================= STEP 4: PARK ================= */

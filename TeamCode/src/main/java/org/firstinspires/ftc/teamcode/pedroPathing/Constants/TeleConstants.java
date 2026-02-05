@@ -11,7 +11,7 @@ public class TeleConstants {
     public static  double TURRET_MAX_ANGLE = 180.0;
 
 
-    public static  double TURRET_KP = 0.03;
+    public static  double TURRET_KP = 0.05;
     public static  double TURRET_KI = 0.0;
     public static  double TURRET_KD = 0.001;
 
