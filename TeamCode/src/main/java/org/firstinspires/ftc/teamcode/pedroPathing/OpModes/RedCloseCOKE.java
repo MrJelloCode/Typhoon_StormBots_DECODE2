@@ -56,7 +56,7 @@ public class RedCloseCOKE extends OpMode {
     /* ================= SHOOTER CONFIG ================= */
 
     // Fixed RPM target for this auto (tuned value)
-    private double target = 3250;
+    private double target = 3275;
     private boolean turretActive = true;
 
     // Intake / transfer power (negative = pull balls inward)
@@ -296,6 +296,7 @@ public class RedCloseCOKE extends OpMode {
         /* -------- Shooter control -------- */
         // Shooter PID only runs when shooterActive == true
         shooter.update(shooterActive, target);
+        limelight.update();
 
         /* -------- Turret control -------- */
 
