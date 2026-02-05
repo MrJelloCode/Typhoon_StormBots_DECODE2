@@ -56,7 +56,7 @@ public class RedCloseCOKE extends OpMode {
     /* ================= SHOOTER CONFIG ================= */
 
     // Fixed RPM target for this auto (tuned value)
-    private double target = 3200;
+    private double target = 3250;
     private boolean turretActive = true;
 
     // Intake / transfer power (negative = pull balls inward)
@@ -159,7 +159,7 @@ public class RedCloseCOKE extends OpMode {
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(1250),
+                new WaitCommand(1300),
                 new InstantCommand(() -> transfer.setPower(0)),
 
 
@@ -212,7 +212,7 @@ public class RedCloseCOKE extends OpMode {
 //                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
 //                new InstantCommand(() -> intake.setPower(power)),
 //                new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(1250),
+                new WaitCommand(1350),
                 new InstantCommand(() -> transfer.setPower(0)),
 
                 /*======== STEP 3.5 : GRAB SECOND SET==============*/
@@ -264,7 +264,7 @@ public class RedCloseCOKE extends OpMode {
 //                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
 //                new InstantCommand(() -> intake.setPower(power)),
 //                new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(1250),
+                new WaitCommand(1350),
                 new InstantCommand(() -> transfer.setPower(0)),
 
                 /* ================= STEP 4: PARK ================= */
@@ -300,7 +300,7 @@ public class RedCloseCOKE extends OpMode {
         /* -------- Turret control -------- */
 
         if(limelight.hasTarget() && gamepad2.right_stick_x == 0){
-            turret.aimWithLimelight(limelight.getTx());
+            turret.aimWithLimelight(-limelight.getTx());
         } else {
             turret.power(gamepad2.right_stick_x*0);
         }
@@ -354,12 +354,12 @@ public class RedCloseCOKE extends OpMode {
                     .build();
 
             toScoreClose = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(134, 81), new Pose(93, 81)))
+                    .addPath(new BezierLine(new Pose(134, 81), new Pose(90, 81)))
                     .setLinearHeadingInterpolation(0, 0)
                     .build();
 
             toAlignSecondary = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(93, 81), new Pose(93, 55)))
+                    .addPath(new BezierLine( new Pose(90, 81), new Pose(93, 55)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
 
@@ -369,12 +369,12 @@ public class RedCloseCOKE extends OpMode {
                     .build();
 
             toScoreSecondary = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(138, 60), new Pose(93, 94)))
+                    .addPath(new BezierLine( new Pose(138, 60), new Pose(90, 81)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
 
             toAlignFinal = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(93, 81), new Pose(93, 45)))
+                    .addPath(new BezierLine( new Pose(90, 81), new Pose(93, 45)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
 
@@ -384,13 +384,13 @@ public class RedCloseCOKE extends OpMode {
                     .build();
 
             toScoreFinal = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(138, 45), new Pose(93, 94)))
+                    .addPath(new BezierLine( new Pose(138, 45), new Pose(90, 81)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
 
 
             toPark = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(93, 94), new Pose(100, 70)))
+                    .addPath(new BezierLine(new Pose(90, 81), new Pose(100, 70)))
                     .setLinearHeadingInterpolation(0, 0)
                     .build();
         }
