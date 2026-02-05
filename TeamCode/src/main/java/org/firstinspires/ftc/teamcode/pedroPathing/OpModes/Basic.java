@@ -55,9 +55,9 @@ public class Basic extends OpMode {
         intakeMotor.setPower(gamepad2.left_stick_y);
         transferMotor.setPower(-gamepad2.right_trigger*0.7);
 
-
-        if(limelight.hasTarget() && gamepad2.right_stick_x == 0){
-            turret.aimWithLimelight(limelight.getTx());
+        limelight.update();
+        if(limelight.hasTarget() && Math.abs(gamepad2.right_stick_x) < 0.05){
+            turret.aimWithLimelight(-limelight.getTx());
         } else {
             turret.power(gamepad2.right_stick_x*0.5);
         }
@@ -67,10 +67,11 @@ public class Basic extends OpMode {
         if(gamepad2.y) {target = 0; shooterEnable = false;}
 
        shooter.update(shooterEnable, target);
-       limelight.update();
+
 
         telemetry.addData("velocity", shooter.getRPM());
         telemetry.addData("Turret has Target", limelight.hasTarget());
+        telemetry.addData("Turret is updating", limelight.isUpdating());
         telemetry.addData("Tx:", limelight.getTx());
         telemetry.update();
 

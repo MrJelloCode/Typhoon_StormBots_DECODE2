@@ -12,7 +12,7 @@ public class Limelight {
 
     private Limelight3A limelight;
     private double tx, ty, ta;
-    private boolean hasTarget;
+    private boolean hasTarget, updating = false;
 
     /* =====================
        CAMERA / GEOMETRY
@@ -63,9 +63,12 @@ public class Limelight {
             tx = ty = ta = 0;
             hasTarget = false;
         }
+        updating = true;
     }
 
     public boolean hasTarget() { return hasTarget; }
+    public boolean isUpdating() { return updating; }
+
     public double getTx() { return tx; }
     public double getTy() { return ty; }
     public double getTa() { return ta; }

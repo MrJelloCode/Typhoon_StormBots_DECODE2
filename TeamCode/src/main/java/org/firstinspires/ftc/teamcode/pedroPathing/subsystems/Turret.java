@@ -29,7 +29,7 @@ public class Turret {
     public Turret(HardwareMap hw) {
 
         turretMotor = hw.get(DcMotorEx.class, "turret");
-        turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+//        turretMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         pid = new PIDController(
                 TeleConstants.TURRET_KP,

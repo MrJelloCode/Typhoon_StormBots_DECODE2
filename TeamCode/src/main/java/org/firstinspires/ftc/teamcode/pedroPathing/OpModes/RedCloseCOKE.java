@@ -56,7 +56,7 @@ public class RedCloseCOKE extends OpMode {
     /* ================= SHOOTER CONFIG ================= */
 
     // Fixed RPM target for this auto (tuned value)
-    private double target = 3150;
+    private double target = 3200;
     private boolean turretActive = true;
 
     // Intake / transfer power (negative = pull balls inward)

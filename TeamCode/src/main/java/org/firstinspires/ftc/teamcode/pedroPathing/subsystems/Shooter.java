@@ -17,7 +17,7 @@ public class Shooter {
     private static final double MAX_ACCEL_TPS2 = 2200.0;
 
     // Velocity tolerance for "at speed" check (RPM)
-    private static final double VELOCITY_TOLERANCE_RPM = 40.0;
+    private static final double VELOCITY_TOLERANCE_RPM = 20.0;
 
     private double commandedVelocityTPS = 0.0;
 
