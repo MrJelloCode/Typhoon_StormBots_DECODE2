@@ -4,6 +4,8 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import java.net.BindException;
+
 /**
  * Streamlined Limelight-based shooter helper
  * Focused on geometry + hood angle + flywheel size
@@ -50,6 +52,10 @@ public class Limelight {
         limelight.pipelineSwitch(0);
         limelight.setPollRateHz(100);
         limelight.start();
+    }
+
+    public void switchPipe(int index) {
+        limelight.pipelineSwitch(index);
     }
 
     public void update() {
