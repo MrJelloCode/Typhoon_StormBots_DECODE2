@@ -83,6 +83,7 @@ public class RedCloseCOKE extends OpMode {
         shooter = new Shooter(hardwareMap);
         turret  = new Turret(hardwareMap);
         limelight = new Limelight(hardwareMap);
+        limelight.switchPipe(0); // 0 is red
 
         /* -------- Motors -------- */
         intake = hardwareMap.get(DcMotorEx.class, "intake");
@@ -338,24 +339,24 @@ public class RedCloseCOKE extends OpMode {
         public Paths(Follower follower) {
 
             ToScoreInitial = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(128, 112), new Pose(93, 94)))
+                    .addPath(new BezierLine(new Pose(128, 112), new Pose(90, 81)))
                     .setLinearHeadingInterpolation(0, 0)
                     .build();
 
             toAlignClose = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(93, 94), new Pose(93, 81)))
+                    .addPath(new BezierLine( new Pose(90, 81), new Pose(93, 79)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
 
 
             toGrabClose = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(93, 81), new Pose(134, 81)))
+                    .addPath(new BezierLine(new Pose(93, 79), new Pose(134, 79)))
                     .setLinearHeadingInterpolation(0, 0)
                     .setTangentHeadingInterpolation()
                     .build();
 
             toScoreClose = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(134, 81), new Pose(90, 81)))
+                    .addPath(new BezierLine(new Pose(134, 79), new Pose(90, 81)))
                     .setLinearHeadingInterpolation(0, 0)
                     .build();
 
