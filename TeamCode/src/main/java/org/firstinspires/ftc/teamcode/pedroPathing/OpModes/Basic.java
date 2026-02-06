@@ -53,8 +53,13 @@ public class Basic extends OpMode {
         drivetrain.fieldCentricDrive(gamepad1, slowMode, slowTurn);
 
         intakeMotor.setPower(gamepad2.left_stick_y);
-        transferMotor.setPower(-gamepad2.right_trigger*0.7);
+        if(gamepad2.right_trigger > 0.1){
 
+            transferMotor.setPower(-gamepad2.right_trigger*0.7);
+
+        }else {
+            transferMotor.setPower(0.25);
+        }
         limelight.update();
         if(limelight.hasTarget() && Math.abs(gamepad2.right_stick_x) < 0.05){
             turret.aimWithLimelight(-limelight.getTx());
