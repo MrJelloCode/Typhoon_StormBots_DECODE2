@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.subsystems.*;
 
-@TeleOp(name = "Basic")
-public class Basic extends OpMode {
+@TeleOp(name = "Basic - Red")
+public class BasicRed extends OpMode {
 
     /* ================= SUBSYSTEMS ================= */
 
@@ -33,6 +33,7 @@ public class Basic extends OpMode {
         shooter = new Shooter(hardwareMap);
         turret = new Turret(hardwareMap);
         limelight = new Limelight(hardwareMap);
+        limelight.switchPipe(0);
 
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
         transferMotor = hardwareMap.get(DcMotorEx.class, "transfer");
