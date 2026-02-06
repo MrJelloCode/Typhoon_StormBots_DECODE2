@@ -29,9 +29,9 @@ import org.firstinspires.ftc.teamcode.pedroPathing.subsystems.Turret;
  * ===============================
  **/
 
-@Autonomous(name = "The 3/4 working auto that was built on no sleep and in a stinky room - Red", group = "Autonomous")
+@Autonomous(name = "Auto after lookin at Burhaduniin poopy code - Blue", group = "Autonomous")
 @Configurable
-public class RedCloseCOKE extends OpMode {
+public class BlueCloseCOKE extends OpMode {
 
     /* ================= TELEMETRY ================= */
 
@@ -61,7 +61,6 @@ public class RedCloseCOKE extends OpMode {
 
     // Intake / transfer power (negative = pull balls inward)
     private double power = -1;
-
     private boolean shooterActive = true;
 
     /* ================= COMMAND SYSTEM ================= */
@@ -76,14 +75,14 @@ public class RedCloseCOKE extends OpMode {
 
         /* -------- Path follower -------- */
         follower = AutoConstants.createFollower(hardwareMap);
-        follower.setStartingPose(new Pose(128, 112, Math.toRadians(0)));
+        follower.setStartingPose(new Pose(144-128, 112, Math.toRadians(180)));
         paths = new Paths(follower);
 
         /* -------- Subsystems -------- */
         shooter = new Shooter(hardwareMap);
         turret  = new Turret(hardwareMap);
         limelight = new Limelight(hardwareMap);
-        limelight.switchPipe(0); // 0 is red
+        limelight.switchPipe(1); // 0 is red
 
         /* -------- Motors -------- */
         intake = hardwareMap.get(DcMotorEx.class, "intake");
@@ -324,6 +323,9 @@ public class RedCloseCOKE extends OpMode {
     /* ================= PATH DEFINITIONS ================= */
 
     public static class Paths {
+        public int factor = 144;
+        int factorAngle = 180;
+
         public PathChain ToScoreInitial;
         public PathChain toAlignClose;
         public PathChain toGrabClose;
@@ -339,61 +341,61 @@ public class RedCloseCOKE extends OpMode {
         public Paths(Follower follower) {
 
             ToScoreInitial = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(128, 112), new Pose(90, 81)))
-                    .setLinearHeadingInterpolation(0, 0)
+                    .addPath(new BezierLine(new Pose(factor - 128, 112), new Pose(factor - 90, 81)))
+                    .setLinearHeadingInterpolation(180, 180)
                     .build();
 
             toAlignClose = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(90, 81), new Pose(93, 79)))
-                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                    .addPath(new BezierLine( new Pose(factor - 90, 81), new Pose(factor - 93, 79)))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
 
 
             toGrabClose = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(93, 79), new Pose(134, 79)))
-                    .setLinearHeadingInterpolation(0, 0)
+                    .addPath(new BezierLine(new Pose(factor - 93, 79), new Pose(factor - 134, 79)))
+                    .setLinearHeadingInterpolation(180, 180)
                     .setTangentHeadingInterpolation()
                     .build();
 
             toScoreClose = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(134, 79), new Pose(90, 81)))
-                    .setLinearHeadingInterpolation(0, 0)
+                    .addPath(new BezierLine(new Pose(factor - 134, 79), new Pose(factor - 90, 81)))
+                    .setLinearHeadingInterpolation(180, 180)
                     .build();
 
             toAlignSecondary = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(90, 81), new Pose(93, 55)))
-                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                    .addPath(new BezierLine( new Pose(factor - 90, 81), new Pose(factor - 93, 55)))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
 
             toGrabSecondary = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(93, 60), new Pose(138, 60)))
-                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                    .addPath(new BezierLine( new Pose(factor - 93, 60), new Pose(factor - 138, 60)))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
 
             toScoreSecondary = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(138, 60), new Pose(90, 81)))
-                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                    .addPath(new BezierLine( new Pose(factor - 138, 60), new Pose(factor - 90, 81)))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
 
             toAlignFinal = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(90, 81), new Pose(93, 45)))
-                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                    .addPath(new BezierLine( new Pose(factor - 90, 81), new Pose(factor - 93, 45)))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
 
             toGrabFinal = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(93, 45), new Pose(138, 45)))
-                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                    .addPath(new BezierLine( new Pose(factor - 93, 45), new Pose(factor - 138, 45)))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
 
             toScoreFinal = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(138, 45), new Pose(90, 81)))
-                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
+                    .addPath(new BezierLine( new Pose(factor - 138, 45), new Pose(factor - 90, 81)))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
 
 
             toPark = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(90, 81), new Pose(100, 70)))
-                    .setLinearHeadingInterpolation(0, 0)
+                    .addPath(new BezierLine(new Pose(factor - 90, 81), new Pose(factor - 100, 70)))
+                    .setLinearHeadingInterpolation(180, 180)
                     .build();
         }
     }
