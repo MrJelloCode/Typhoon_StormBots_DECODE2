@@ -75,7 +75,7 @@ public class BlueCloseCOKE extends OpMode {
 
         /* -------- Path follower -------- */
         follower = AutoConstants.createFollower(hardwareMap);
-        follower.setStartingPose(new Pose(144-128, 112, Math.toRadians(180)));
+        follower.setStartingPose(new Pose(16, 112, Math.toRadians(180)));
         paths = new Paths(follower);
 
         /* -------- Subsystems -------- */
@@ -341,25 +341,24 @@ public class BlueCloseCOKE extends OpMode {
         public Paths(Follower follower) {
 
             ToScoreInitial = follower.pathBuilder()
-                    .addPath(new BezierLine(new Pose(factor - 128, 112), new Pose(factor - 90, 81)))
-                    .setLinearHeadingInterpolation(180, 180)
+                    .addPath(new BezierLine(new Pose(16, 112), new Pose(54, 81)))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
 
             toAlignClose = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(factor - 90, 81), new Pose(factor - 93, 79)))
+                    .addPath(new BezierLine( new Pose(54, 81), new Pose(51, 79)))
                     .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
 
 
             toGrabClose = follower.pathBuilder()
                     .addPath(new BezierLine(new Pose(factor - 93, 79), new Pose(factor - 134, 79)))
-                    .setLinearHeadingInterpolation(180, 180)
-                    .setTangentHeadingInterpolation()
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
 
             toScoreClose = follower.pathBuilder()
                     .addPath(new BezierLine(new Pose(factor - 134, 79), new Pose(factor - 90, 81)))
-                    .setLinearHeadingInterpolation(180, 180)
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
 
             toAlignSecondary = follower .pathBuilder()
@@ -378,24 +377,24 @@ public class BlueCloseCOKE extends OpMode {
                     .build();
 
             toAlignFinal = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(factor - 90, 81), new Pose(factor - 93, 45)))
+                    .addPath(new BezierLine( new Pose(factor - 90, 81), new Pose(factor - 93, 40)))
                     .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
 
             toGrabFinal = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(factor - 93, 45), new Pose(factor - 138, 45)))
+                    .addPath(new BezierLine( new Pose(factor - 93, 40), new Pose(factor - 138, 40)))
                     .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
 
             toScoreFinal = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(factor - 138, 45), new Pose(factor - 90, 81)))
+                    .addPath(new BezierLine( new Pose(factor - 138, 40), new Pose(factor - 90, 81)))
                     .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
 
 
             toPark = follower.pathBuilder()
                     .addPath(new BezierLine(new Pose(factor - 90, 81), new Pose(factor - 100, 70)))
-                    .setLinearHeadingInterpolation(180, 180)
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(180))
                     .build();
         }
     }

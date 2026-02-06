@@ -376,17 +376,17 @@ public class RedCloseCOKE extends OpMode {
                     .build();
 
             toAlignFinal = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(90, 81), new Pose(93, 45)))
+                    .addPath(new BezierLine( new Pose(90, 81), new Pose(93, 40)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
 
             toGrabFinal = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(93, 45), new Pose(138, 45)))
+                    .addPath(new BezierLine( new Pose(93, 40), new Pose(138, 40)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
 
             toScoreFinal = follower .pathBuilder()
-                    .addPath(new BezierLine( new Pose(138, 45), new Pose(90, 81)))
+                    .addPath(new BezierLine( new Pose(138, 40), new Pose(90, 81)))
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(0))
                     .build();
 

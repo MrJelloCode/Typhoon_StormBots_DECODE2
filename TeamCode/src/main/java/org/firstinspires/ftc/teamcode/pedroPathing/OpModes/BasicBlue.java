@@ -1,13 +1,9 @@
 package org.firstinspires.ftc.teamcode.pedroPathing.OpModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.pedroPathing.subsystems.Drivetrain;
-import org.firstinspires.ftc.teamcode.pedroPathing.subsystems.Limelight;
-import org.firstinspires.ftc.teamcode.pedroPathing.subsystems.Shooter;
-import org.firstinspires.ftc.teamcode.pedroPathing.subsystems.Turret;
+import org.firstinspires.ftc.teamcode.pedroPathing.subsystems.*;
 
 @TeleOp(name = "Basic - Blue")
 public class BasicBlue extends OpMode {
@@ -58,8 +54,13 @@ public class BasicBlue extends OpMode {
         drivetrain.fieldCentricDrive(gamepad1, slowMode, slowTurn);
 
         intakeMotor.setPower(gamepad2.left_stick_y);
-        transferMotor.setPower(-gamepad2.right_trigger*0.7);
+        if(gamepad2.right_trigger > 0.1){
 
+            transferMotor.setPower(-gamepad2.right_trigger*0.7);
+
+        }else {
+            transferMotor.setPower(0.25);
+        }
         limelight.update();
         if(limelight.hasTarget() && Math.abs(gamepad2.right_stick_x) < 0.05){
             turret.aimWithLimelight(-limelight.getTx());
@@ -71,7 +72,7 @@ public class BasicBlue extends OpMode {
         if(gamepad2.b) {target = 3800; shooterEnable = true;}
         if(gamepad2.y) {target = 0; shooterEnable = false;}
 
-       shooter.update(shooterEnable, target);
+        shooter.update(shooterEnable, target);
 
 
         telemetry.addData("velocity", shooter.getRPM());
