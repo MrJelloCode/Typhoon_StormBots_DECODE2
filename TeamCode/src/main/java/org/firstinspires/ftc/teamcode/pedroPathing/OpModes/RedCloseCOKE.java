@@ -56,7 +56,7 @@ public class RedCloseCOKE extends OpMode {
     /* ================= SHOOTER CONFIG ================= */
 
     // Fixed RPM target for this auto (tuned value)
-    private double target = 3260;
+    private double target = 3300;
     private boolean turretActive = true;
 
     // Intake / transfer power (negative = pull balls inward)
@@ -118,7 +118,7 @@ public class RedCloseCOKE extends OpMode {
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(1250),
+                new WaitCommand(1450),
                 new InstantCommand(() -> transfer.setPower(0)),
 //                new InstantCommand(() -> intake.setPower(0)),
 
@@ -160,7 +160,7 @@ public class RedCloseCOKE extends OpMode {
                 new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(target)),
                 new InstantCommand(() -> intake.setPower(power)),
                 new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(1300),
+                new WaitCommand(1400),
                 new InstantCommand(() -> transfer.setPower(0)),
 
 
@@ -213,7 +213,7 @@ public class RedCloseCOKE extends OpMode {
 //                new WaitUntilCommand(() -> !follower.isBusy() && shooter.atTargetVelocity(shooter.getRPM(), target)),
 //                new InstantCommand(() -> intake.setPower(power)),
 //                new InstantCommand(() -> transfer.setPower(power)),
-                new WaitCommand(1350),
+                new WaitCommand(1450),
                 new InstantCommand(() -> transfer.setPower(0)),
 
                 /*======== STEP 3.5 : GRAB SECOND SET==============*/
