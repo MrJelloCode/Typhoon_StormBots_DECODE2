@@ -17,6 +17,7 @@ This README will remain as the global record of what Melvin Pathing was. Melvin 
 - Shahir
 - Nathan
 - Stiven
+- Kirill
 - Avery
 - Annabelle
 - Zahra
